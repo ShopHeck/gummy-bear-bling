@@ -1,1 +1,149 @@
-{"sections":{"main":{"type":"main-product","settings":{}},"trust":{"type":"trust-strip","settings":{}},"reviews":{"type":"reviews","settings":{}}},"order":["main","trust","reviews"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "settings": {}
+    },
+    "trust_strip_4AhBr6": {
+      "type": "trust-strip",
+      "blocks": {
+        "item_YUM6EE": {
+          "type": "item",
+          "settings": {
+            "icon": "💛",
+            "title": "Loved & guaranteed",
+            "text": "30 days, no-fuss returns"
+          }
+        },
+        "item_GTEP7x": {
+          "type": "item",
+          "settings": {
+            "icon": "🇺🇸",
+            "title": "Handmade In the USA",
+            "text": "Poured to Perfection"
+          }
+        },
+        "item_3aB8zk": {
+          "type": "item",
+          "settings": {
+            "icon": "🐻",
+            "title": "Natural Dried Epoxy Resin",
+            "text": "Multicolored Epoxy Resin Charms"
+          }
+        },
+        "item_bwPbXm": {
+          "type": "item",
+          "settings": {
+            "icon": "💕",
+            "title": "Same Day USA Shipping",
+            "text": "Order by 12PM Shipped Same Day"
+          }
+        }
+      },
+      "block_order": [
+        "item_YUM6EE",
+        "item_GTEP7x",
+        "item_3aB8zk",
+        "item_bwPbXm"
+      ],
+      "settings": {}
+    },
+    "reviews_mYrtjr": {
+      "type": "reviews",
+      "blocks": {
+        "review_J9RN3T": {
+          "type": "review",
+          "settings": {
+            "quote": "I LOVEE THESE! They are hard to keep with my kids stealing it everytime I take it off! Reminds me of my childhood.",
+            "name": "Marcy, L.",
+            "location": "Orlando, FL"
+          }
+        },
+        "review_97p86F": {
+          "type": "review",
+          "settings": {
+            "quote": "I get compliments every single time I wear it!",
+            "name": "Janet H.",
+            "location": "Tampa, FL"
+          }
+        },
+        "review_8axEYr": {
+          "type": "review",
+          "settings": {
+            "quote": "My FAVORITE Necklace to Wear.",
+            "name": "Nikki S.",
+            "location": "St. Pete, FL"
+          }
+        }
+      },
+      "block_order": [
+        "review_J9RN3T",
+        "review_97p86F",
+        "review_8axEYr"
+      ],
+      "settings": {
+        "eyebrow": "The gummy bear gang",
+        "heading": "People can't stop wearing them",
+        "rating_text": "4.1 average · real customer photos"
+      }
+    },
+    "1781715912e6a48b44": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_cb14325_9k9gym": {
+          "type": "ai_gen_block_cb14325",
+          "settings": {
+            "title": "Frequently Asked Questions",
+            "subtitle": "Find answers to common questions about our jewelry",
+            "question_1": "What materials are your gummy bear jewelry made from?",
+            "answer_1": "Our gummy bear jewelry is crafted from high-quality materials including 14k gold, sterling silver, and genuine gemstones. Each piece is carefully designed to capture the playful spirit of gummy bears while maintaining luxury quality.",
+            "question_2": "How do I care for my gummy bear jewelry?",
+            "answer_2": "To keep your jewelry sparkling, clean it gently with a soft cloth and mild soap. Avoid harsh chemicals and store pieces separately in a jewelry box. Remove jewelry before swimming, exercising, or sleeping to prevent damage.",
+            "question_3": "What is your return and exchange policy?",
+            "answer_3": "We offer a 30-day return policy for unworn items in original condition. Custom or personalized pieces are final sale. Contact our customer service team to initiate a return or exchange.",
+            "question_4": "Do you offer international shipping?",
+            "answer_4": "Yes! We ship worldwide. Shipping times vary by location, typically 5-10 business days for domestic orders and 10-20 business days for international orders. All orders are fully insured and trackable.",
+            "question_5": "Can I customize or personalize my jewelry?",
+            "answer_5": "Absolutely! We offer engraving services and custom design options for many of our pieces. Contact us with your ideas and our team will work with you to create something special.",
+            "question_6": "Is my jewelry hypoallergenic?",
+            "answer_6": "Our sterling silver and 14k gold pieces are hypoallergenic and safe for sensitive skin. If you have specific metal allergies, please check the product description or contact us before purchasing.",
+            "desktop_width_percent": 100,
+            "border_radius": 8,
+            "background_color": "#ffffff",
+            "item_background_color": "#ffffff",
+            "border_color": "#e5e5e5",
+            "accent_color": "#FE02F5",
+            "title_color": "#34202C",
+            "subtitle_color": "#666666",
+            "question_color": "#34202C",
+            "answer_color": "#666666",
+            "title_size": 32,
+            "subtitle_size": 16,
+            "question_size": 18,
+            "answer_size": 15
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_cb14325_9k9gym"
+      ],
+      "settings": {}
+    }
+  },
+  "order": [
+    "main",
+    "trust_strip_4AhBr6",
+    "reviews_mYrtjr",
+    "1781715912e6a48b44"
+  ]
+}
