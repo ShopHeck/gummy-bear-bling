@@ -9,8 +9,9 @@
  */
 {
   "current": {
-    "accent_color": "#FE02F5",
-    "heading_color": "#34202C",
+    "accent_color": "#FF00F7",
+    "heading_color": "#080707",
+    "cart_promo_link": "shopify://products/build-your-3-bear-bundle",
     "social_tiktok": "https://tiktok.com/@gummybearbling",
     "social_instagram": "https://instagram.com/gummybearbling",
     "social_pinterest": "https://pinterest.com/gummybearbling",

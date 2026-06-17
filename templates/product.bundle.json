@@ -1,37 +1,163 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main": {
       "type": "bundle-builder",
       "blocks": {
-        "f1": { "type": "flavor", "settings": { "color": "#FF3B5C", "label": "Cherry" } },
-        "f2": { "type": "flavor", "settings": { "color": "#FF8A3D", "label": "Tangerine" } },
-        "f3": { "type": "flavor", "settings": { "color": "#FFCE2E", "label": "Lemon" } },
-        "f4": { "type": "flavor", "settings": { "color": "#46CF7C", "label": "Lime" } },
-        "f5": { "type": "flavor", "settings": { "color": "#3D8BFF", "label": "Blueberry" } },
-        "f6": { "type": "flavor", "settings": { "color": "#A55CFF", "label": "Grape" } },
-        "f7": { "type": "flavor", "settings": { "color": "#FF6FB0", "label": "Bubblegum" } },
-        "f8": { "type": "flavor", "settings": { "color": "#34D6D6", "label": "Aqua" } }
+        "f1": {
+          "type": "flavor",
+          "settings": {
+            "color": "#FF3B5C",
+            "label": "Cherry"
+          }
+        },
+        "f2": {
+          "type": "flavor",
+          "settings": {
+            "color": "#FF8A3D",
+            "label": "Tangerine"
+          }
+        },
+        "f3": {
+          "type": "flavor",
+          "settings": {
+            "color": "#FFCE2E",
+            "label": "Lemon"
+          }
+        },
+        "f4": {
+          "type": "flavor",
+          "settings": {
+            "color": "#46CF7C",
+            "label": "Lime"
+          }
+        },
+        "f5": {
+          "type": "flavor",
+          "settings": {
+            "color": "#3D8BFF",
+            "label": "Blueberry"
+          }
+        },
+        "f6": {
+          "type": "flavor",
+          "settings": {
+            "color": "#A55CFF",
+            "label": "Grape"
+          }
+        },
+        "f7": {
+          "type": "flavor",
+          "settings": {
+            "color": "#FF6FB0",
+            "label": "Bubblegum"
+          }
+        },
+        "f8": {
+          "type": "flavor",
+          "settings": {
+            "color": "#34D6D6",
+            "label": "Aqua"
+          }
+        }
       },
-      "block_order": ["f1", "f2", "f3", "f4", "f5", "f6", "f7", "f8"]
+      "block_order": [
+        "f1",
+        "f2",
+        "f3",
+        "f4",
+        "f5",
+        "f6",
+        "f7",
+        "f8"
+      ],
+      "settings": {}
     },
     "trust": {
       "type": "trust-strip",
       "blocks": {
-        "t1": { "type": "item", "settings": { "icon": "🤚", "title": "Handmade to order", "text": "Each bear hand-poured & sanded" } },
-        "t2": { "type": "item", "settings": { "icon": "✨", "title": "Won't turn you green", "text": "Tarnish-proof gold-plated steel" } },
-        "t3": { "type": "item", "settings": { "icon": "🚚", "title": "Free US shipping", "text": "Ships in 1–2 business days" } },
-        "t4": { "type": "item", "settings": { "icon": "💛", "title": "Loved & guaranteed", "text": "30 days, no-fuss returns" } }
+        "t1": {
+          "type": "item",
+          "settings": {
+            "icon": "🤚",
+            "title": "Handmade to order",
+            "text": "Each bear hand-poured & sanded"
+          }
+        },
+        "t2": {
+          "type": "item",
+          "settings": {
+            "icon": "✨",
+            "title": "Won't turn you green",
+            "text": "Tarnish-proof gold-plated steel"
+          }
+        },
+        "t3": {
+          "type": "item",
+          "settings": {
+            "icon": "🚚",
+            "title": "Free US shipping",
+            "text": "Ships in 1–2 business days"
+          }
+        },
+        "t4": {
+          "type": "item",
+          "settings": {
+            "icon": "💛",
+            "title": "Loved & guaranteed",
+            "text": "30 days, no-fuss returns"
+          }
+        }
       },
-      "block_order": ["t1", "t2", "t3", "t4"]
+      "block_order": [
+        "t1",
+        "t2",
+        "t3",
+        "t4"
+      ],
+      "settings": {}
     },
     "reviews": {
       "type": "reviews",
       "blocks": {
-        "r1": { "type": "review", "settings": { "quote": "I LOVEE THESE! Reminds me of my childhood and I get compliments every time.", "name": "Marcy L.", "location": "Orlando, FL" } },
-        "r2": { "type": "review", "settings": { "quote": "Stacking three is so much cuter than one — worth every penny.", "name": "Janet H.", "location": "Tampa, FL" } },
-        "r3": { "type": "review", "settings": { "quote": "My FAVORITE necklaces to wear. The whole stack goes with everything.", "name": "Nikki S.", "location": "St. Pete, FL" } }
+        "r1": {
+          "type": "review",
+          "settings": {
+            "quote": "I LOVEE THESE! Reminds me of my childhood and I get compliments every time.",
+            "name": "Marcy L.",
+            "location": "Orlando, FL"
+          }
+        },
+        "r2": {
+          "type": "review",
+          "settings": {
+            "quote": "Stacking three is so much cuter than one — worth every penny.",
+            "name": "Janet H.",
+            "location": "Tampa, FL"
+          }
+        },
+        "r3": {
+          "type": "review",
+          "settings": {
+            "quote": "My FAVORITE necklaces to wear. The whole stack goes with everything.",
+            "name": "Nikki S.",
+            "location": "St. Pete, FL"
+          }
+        }
       },
-      "block_order": ["r1", "r2", "r3"],
+      "block_order": [
+        "r1",
+        "r2",
+        "r3"
+      ],
       "settings": {
         "eyebrow": "The gummy bear gang",
         "heading": "Stacks get the most compliments",
@@ -39,5 +165,9 @@
       }
     }
   },
-  "order": ["main", "trust", "reviews"]
+  "order": [
+    "main",
+    "trust",
+    "reviews"
+  ]
 }

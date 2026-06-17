@@ -19,7 +19,7 @@
         "cta_link": "",
         "cta2_text": "Build a stack & save",
         "cta2_link": "",
-        "rating_text": "Loved by thousands of customers"
+        "rating_text": "4.1 from real customers"
       }
     },
     "trust": {
@@ -79,41 +79,126 @@
     "color_story": {
       "type": "color-story",
       "blocks": {
-        "cs1": { "type": "flavor", "settings": { "color": "#3D8BFF", "label": "Blueberry", "description": "cool, classic, goes with everything." } },
-        "cs2": { "type": "flavor", "settings": { "color": "#FF3B5C", "label": "Cherry", "description": "bold and sweet — our most-gifted bear." } },
-        "cs3": { "type": "flavor", "settings": { "color": "#A55CFF", "label": "Grape", "description": "dreamy purple, a festival favorite." } },
-        "cs4": { "type": "flavor", "settings": { "color": "#FF6FB0", "label": "Bubblegum", "description": "soft pink Y2K nostalgia in a bear." } },
-        "cs5": { "type": "flavor", "settings": { "color": "#FF8A3D", "label": "Tangerine", "description": "sunny orange that pops on gold." } },
-        "cs6": { "type": "flavor", "settings": { "color": "#FFCE2E", "label": "Lemon", "description": "bright, cheerful, impossible to miss." } },
-        "cs7": { "type": "flavor", "settings": { "color": "#46CF7C", "label": "Lime", "description": "fresh green, a little bit retro." } },
-        "cs8": { "type": "flavor", "settings": { "color": "#34D6D6", "label": "Aqua", "description": "breezy teal for summer stacks." } }
+        "flavor_zihR33": {
+          "type": "flavor",
+          "settings": {
+            "color": "#3d8bff",
+            "label": "Blueberry",
+            "description": "cool, classic, goes with everything.",
+            "product": "gummy-bear-necklace"
+          }
+        }
       },
-      "block_order": ["cs1", "cs2", "cs3", "cs4", "cs5", "cs6", "cs7", "cs8"],
+      "block_order": [
+        "flavor_zihR33"
+      ],
       "settings": {
         "eyebrow": "Tap a flavor",
         "heading": "Which one's yours?",
         "subheading": "Tap a flavor to meet the bear — then shop that exact necklace.",
-        "cta_text": "Shop the %s bear",
-        "cta_link": "shopify://collections/gummy-bear-necklace"
+        "cta_text": "Shop necklaces",
+        "cta_link": "shopify://products/gummy-bear-necklace"
       }
     },
     "bundle": {
       "type": "bundle",
       "blocks": {
-        "b1": { "type": "flavor", "settings": { "color": "#FF3B5C", "label": "Cherry" } },
-        "b2": { "type": "flavor", "settings": { "color": "#FF8A3D", "label": "Tangerine" } },
-        "b3": { "type": "flavor", "settings": { "color": "#FFCE2E", "label": "Lemon" } },
-        "b4": { "type": "flavor", "settings": { "color": "#46CF7C", "label": "Lime" } },
-        "b5": { "type": "flavor", "settings": { "color": "#3D8BFF", "label": "Blueberry" } },
-        "b6": { "type": "flavor", "settings": { "color": "#A55CFF", "label": "Grape" } },
-        "b7": { "type": "flavor", "settings": { "color": "#FF6FB0", "label": "Bubblegum" } },
-        "b8": { "type": "flavor", "settings": { "color": "#34D6D6", "label": "Aqua" } }
+        "flavor_b3dBJx": {
+          "type": "flavor",
+          "settings": {
+            "color": "#FFFFFF",
+            "label": "Vanilla"
+          }
+        },
+        "flavor_LpgtdG": {
+          "type": "flavor",
+          "settings": {
+            "color": "#000000",
+            "label": "Blackberry"
+          }
+        },
+        "flavor_UNdmKE": {
+          "type": "flavor",
+          "settings": {
+            "color": "#ff3b5c",
+            "label": "Cherry"
+          }
+        },
+        "flavor_8zHwbj": {
+          "type": "flavor",
+          "settings": {
+            "color": "#FBFF00",
+            "label": "Lemon"
+          }
+        },
+        "flavor_qtW6kR": {
+          "type": "flavor",
+          "settings": {
+            "color": "#ADFF3B",
+            "label": "Lime"
+          }
+        },
+        "flavor_3Hn6te": {
+          "type": "flavor",
+          "settings": {
+            "color": "#FF8400",
+            "label": "Orange"
+          }
+        },
+        "flavor_UDWVc7": {
+          "type": "flavor",
+          "settings": {
+            "color": "#833BFF",
+            "label": "Grape"
+          }
+        },
+        "flavor_PC4TX8": {
+          "type": "flavor",
+          "settings": {
+            "color": "#FE02F5",
+            "label": "Watermelon"
+          }
+        },
+        "flavor_C8Gc4X": {
+          "type": "flavor",
+          "settings": {
+            "color": "#ff3b5c",
+            "label": "Cherry"
+          }
+        },
+        "flavor_yLCyHA": {
+          "type": "flavor",
+          "settings": {
+            "color": "#3B65FF",
+            "label": "Blueberry"
+          }
+        },
+        "flavor_diyXKp": {
+          "type": "flavor",
+          "settings": {
+            "color": "#ff3b5c",
+            "label": "Cherry"
+          }
+        }
       },
-      "block_order": ["b1", "b2", "b3", "b4", "b5", "b6", "b7", "b8"],
+      "block_order": [
+        "flavor_b3dBJx",
+        "flavor_LpgtdG",
+        "flavor_UNdmKE",
+        "flavor_8zHwbj",
+        "flavor_qtW6kR",
+        "flavor_3Hn6te",
+        "flavor_UDWVc7",
+        "flavor_PC4TX8",
+        "flavor_C8Gc4X",
+        "flavor_yLCyHA",
+        "flavor_diyXKp"
+      ],
       "settings": {
         "eyebrow": "Build a stack",
         "heading": "Three bears, better together",
         "text": "Layer your favorites and save — way more fun than one. Tap colors below to fill your stack.",
+        "product": "build-your-3-bear-bundle",
         "price": "$45",
         "compare": "$60",
         "save_text": "Save $15",
