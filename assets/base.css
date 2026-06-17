@@ -58,6 +58,10 @@ button{font-family:inherit}
 .wrap{max-width:var(--maxw);margin:0 auto;padding:0 22px}
 .center{text-align:center}
 .muted{color:var(--ink-soft)}
+/* screen-reader-only; the skip link reveals itself on keyboard focus */
+.visually-hidden{position:absolute !important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0}
+.visually-hidden:focus{position:fixed !important;top:10px;left:10px;z-index:200;width:auto;height:auto;margin:0;clip:auto;clip-path:none;
+  padding:.7rem 1.1rem;border-radius:999px;background:var(--ink);color:#fff;font-weight:700;font-family:var(--font-display);box-shadow:var(--shadow)}
 
 /* ---------- gummy translucent surface (signature) ---------- */
 .gummy{
@@ -114,8 +118,8 @@ button{font-family:inherit}
 }
 .logo{font-family:var(--font-display);font-weight:800;font-size:1.26rem;display:flex;align-items:center;gap:.5rem;white-space:nowrap}
 .logo .dot{width:26px;height:26px;flex:none}
-.navlinks{display:flex;gap:1.4rem;font-weight:600;font-size:.92rem}
-.navlinks a{position:relative;padding:.2rem 0;color:var(--ink-soft)}
+.navlinks{display:flex;align-items:center;gap:1.15rem;font-weight:600;font-size:.9rem;flex-wrap:nowrap}
+.navlinks a{position:relative;padding:.2rem 0;color:var(--ink-soft);white-space:nowrap}
 .navlinks a:hover{color:var(--ink)}
 .navlinks a::after{content:"";position:absolute;left:0;bottom:-3px;height:2.5px;width:0;border-radius:2px;background:var(--cta);transition:width .22s}
 .navlinks a:hover::after{width:100%}
@@ -368,9 +372,12 @@ html.cd-locked{overflow:hidden}
 .article-hero{width:100%;height:auto;border-radius:var(--r-lg);aspect-ratio:1000/560;object-fit:cover}
 
 /* ---------- responsive ---------- */
-@media(max-width:900px){
+/* collapse the nav to a menu button before the links get cramped */
+@media(max-width:1100px){
   .navlinks{display:none}
   .menu-btn{display:block}
+}
+@media(max-width:900px){
   .grid,.grid.cols-3{grid-template-columns:repeat(2,1fr)}
   .trust-strip{grid-template-columns:repeat(2,1fr)}
   .reviews{grid-template-columns:1fr}
