@@ -1,0 +1,51 @@
+<div class="section" id="reviews">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">{{ section.settings.eyebrow }}</span>
+      <h2>{{ section.settings.heading }}</h2>
+      <p><span class="stars" style="font-size:1.1rem">★★★★☆</span>&nbsp; {{ section.settings.rating_text }}</p>
+    </div>
+    <div class="reviews">
+      {%- assign avs = '#FF3B5C,#FF6FB0,#A55CFF,#3D8BFF,#46CF7C,#FF8A3D' | split: ',' -%}
+      {%- for block in section.blocks -%}
+        <div class="review gummy reveal" {{ block.shopify_attributes }}>
+          <div class="stars">★★★★★</div>
+          <p>“{{ block.settings.quote }}”</p>
+          <div class="who">
+            <span class="av" style="background:{{ avs[forloop.index0] }}">{{ block.settings.name | slice: 0 }}</span>
+            <div><b>{{ block.settings.name }}</b><br><span>{{ block.settings.location }} · verified</span></div>
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Reviews",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "The gummy bear gang" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "People can't stop wearing them" },
+    { "type": "text", "id": "rating_text", "label": "Rating text", "default": "4.1 average · real customer photos" }
+  ],
+  "blocks": [
+    {
+      "type": "review", "name": "Review",
+      "settings": [
+        { "type": "textarea", "id": "quote", "label": "Quote", "default": "I get compliments every single time I wear it!" },
+        { "type": "text", "id": "name", "label": "Name", "default": "Janet H." },
+        { "type": "text", "id": "location", "label": "Location", "default": "Tampa, FL" }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [{
+    "name": "Reviews",
+    "blocks": [
+      { "type": "review", "settings": { "quote": "I have honestly never received so many compliments as I have on my neat little gummy bear necklace!", "name": "Janet H.", "location": "Tampa, FL" } },
+      { "type": "review", "settings": { "quote": "The pink bear has become an everyday necessity. I can't leave the house without it!", "name": "Kimberly C.", "location": "Miami, FL" } },
+      { "type": "review", "settings": { "quote": "Gave a purple one to my daughter for her first day of school. She absolutely loves it.", "name": "Mary L.", "location": "Kansas City, MO" } }
+    ]
+  }]
+}
+{% endschema %}

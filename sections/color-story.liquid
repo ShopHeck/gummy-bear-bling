@@ -1,0 +1,28 @@
+<div class="section">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">{{ section.settings.eyebrow }}</span>
+      <h2>{{ section.settings.heading }}</h2>
+    </div>
+    <div class="colorstory gummy reveal">
+      <div class="stage"><span class="bearbox" data-colorstory-stage style="width:min(280px,72%)"></span></div>
+      <div>
+        <div class="flavors" data-colorstory-row></div>
+        <p class="flavor-name" data-colorstory-name></p>
+        <a href="{{ section.settings.cta_link | default: routes.all_products_collection_url }}" class="btn" style="margin-top:.4rem">{{ section.settings.cta_text }}</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Color story",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Tap a flavor" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Which one's yours?" },
+    { "type": "text", "id": "cta_text", "label": "Button text", "default": "Shop necklaces" },
+    { "type": "url", "id": "cta_link", "label": "Button link" }
+  ],
+  "presets": [{ "name": "Color story" }]
+}
+{% endschema %}

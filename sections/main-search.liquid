@@ -1,0 +1,23 @@
+<div class="section">
+  <div class="wrap">
+    <div class="coll-head"><h1>Search</h1></div>
+    <form action="{{ routes.search_url }}" method="get" class="emailform" style="margin-bottom:30px">
+      <input type="search" name="q" value="{{ search.terms | escape }}" placeholder="Search for bears…" aria-label="Search">
+      <button type="submit" class="btn">Search</button>
+    </form>
+    {%- if search.performed -%}
+      <p class="center muted" style="margin-bottom:20px">{{ search.results_count }} result(s) for “{{ search.terms }}”</p>
+      <div class="grid">
+        {%- assign colors = '#3D8BFF,#FF3B5C,#A55CFF,#FF8A3D,#46CF7C,#FF6FB0,#FFCE2E,#34D6D6' | split: ',' -%}
+        {%- for item in search.results -%}
+          {%- if item.object_type == 'product' -%}
+            {% render 'product-card', product: item, bear_color: colors[forloop.index0] %}
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+{% schema %}
+{ "name": "Search", "settings": [] }
+{% endschema %}

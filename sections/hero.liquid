@@ -1,0 +1,35 @@
+<section class="hero">
+  <div class="floaties" id="gbb-floaties" aria-hidden="true"></div>
+  <div class="wrap">
+    <span class="eyebrow reveal">{{ section.settings.eyebrow }}</span>
+    <h1 class="reveal">{{ section.settings.heading }}</h1>
+    <p class="sub reveal">{{ section.settings.subheading }}</p>
+    <div class="hero-cta reveal">
+      <a href="{{ section.settings.cta_link | default: routes.all_products_collection_url }}" class="btn lg">{{ section.settings.cta_text }}</a>
+      {%- if section.settings.cta2_text != blank -%}
+        <a href="{{ section.settings.cta2_link }}" class="btn ghost lg">{{ section.settings.cta2_text }}</a>
+      {%- endif -%}
+    </div>
+    <div class="hero-trust reveal">
+      <span><span class="stars">★★★★☆</span> {{ section.settings.rating_text }}</span>
+      <span>·</span><span>🇺🇸 Made in the USA</span>
+      <span>·</span><span>↩︎ 30-day happiness guarantee</span>
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Hero",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Handmade resin jewelry · since 2021" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Step into the gummy world" },
+    { "type": "textarea", "id": "subheading", "label": "Subheading", "default": "A little bear-shaped hit of nostalgia, hand-poured in resin and hung on tarnish-proof gold. Pick your flavor — get compliments everywhere you go." },
+    { "type": "text", "id": "cta_text", "label": "Button text", "default": "Shop the bears" },
+    { "type": "url", "id": "cta_link", "label": "Button link" },
+    { "type": "text", "id": "cta2_text", "label": "Secondary button text", "default": "Build a stack & save" },
+    { "type": "url", "id": "cta2_link", "label": "Secondary button link" },
+    { "type": "text", "id": "rating_text", "label": "Rating text", "default": "4.1 from real customers" }
+  ],
+  "presets": [{ "name": "Hero" }]
+}
+{% endschema %}

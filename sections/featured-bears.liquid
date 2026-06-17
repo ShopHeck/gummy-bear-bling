@@ -1,0 +1,43 @@
+<div class="section" id="shop">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">{{ section.settings.eyebrow }}</span>
+      <h2>{{ section.settings.heading }}</h2>
+      {%- if section.settings.subheading != blank -%}<p>{{ section.settings.subheading }}</p>{%- endif -%}
+    </div>
+    <div class="grid">
+      {%- assign colors = '#3D8BFF,#FF3B5C,#A55CFF,#FF8A3D,#46CF7C,#FF6FB0,#FFCE2E,#34D6D6' | split: ',' -%}
+      {%- assign coll = collections[section.settings.collection] -%}
+      {%- if coll != blank and coll.products_count > 0 -%}
+        {%- for product in coll.products limit: section.settings.count -%}
+          {% render 'product-card', product: product, bear_color: colors[forloop.index0] %}
+        {%- endfor -%}
+      {%- else -%}
+        {%- comment -%} Placeholder bears when no collection is selected yet {%- endcomment -%}
+        {%- assign demo = 'Original Bear Necklace,Gold Bling Bracelet,Double Bear Necklace,Charm Bracelet' | split: ',' -%}
+        {%- assign prices = '$20,$29.99,$25,$20' | split: ',' -%}
+        {%- for name in demo -%}
+          <div class="pcard gummy reveal">
+            <div class="ph"><span class="chain"></span><span class="bearbox" data-bear="{{ colors[forloop.index0] }}"></span></div>
+            <h3>{{ name }}</h3>
+            <div class="price">{{ prices[forloop.index0] }}</div>
+            <div class="rev"><span class="stars">★★★★★</span> loved</div>
+          </div>
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Featured bears",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Best-selling bears" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Pick your flavor" },
+    { "type": "text", "id": "subheading", "label": "Subheading", "default": "Ten colors, four chains. Mix, match, and stack them up." },
+    { "type": "collection", "id": "collection", "label": "Collection" },
+    { "type": "range", "id": "count", "label": "Products to show", "min": 2, "max": 8, "step": 1, "default": 4 }
+  ],
+  "presets": [{ "name": "Featured bears" }]
+}
+{% endschema %}

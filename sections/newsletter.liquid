@@ -1,0 +1,28 @@
+<div class="section">
+  <div class="wrap">
+    <div class="gang gummy reveal" data-newsletter>
+      <span class="incentive">{{ section.settings.incentive }}</span>
+      <h2>{{ section.settings.heading }}</h2>
+      <p>{{ section.settings.text }}</p>
+      {%- form 'customer', class: 'emailform' -%}
+        <input type="hidden" name="contact[tags]" value="newsletter">
+        <input type="email" name="contact[email]" placeholder="you@email.com" aria-label="Email address" required>
+        <button type="submit" class="btn">{{ section.settings.button }}</button>
+      {%- endform -%}
+      <p class="form-note">No spam, just sweetness. Unsubscribe anytime.</p>
+      <p class="form-success" data-newsletter-success style="display:none">🍬 You're in! Check your inbox for your code.</p>
+    </div>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Newsletter",
+  "settings": [
+    { "type": "text", "id": "incentive", "label": "Incentive badge", "default": "🍬 10% off your first bear" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Join the gummy bear gang" },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "First dibs on new flavors, drops, and the occasional treat." },
+    { "type": "text", "id": "button", "label": "Button", "default": "Get my 10% off" }
+  ],
+  "presets": [{ "name": "Newsletter" }]
+}
+{% endschema %}

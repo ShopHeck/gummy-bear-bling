@@ -1,0 +1,37 @@
+<header class="site-header">
+  <div class="wrap">
+    <nav class="navbar" aria-label="Primary">
+      <a class="logo" href="{{ routes.root_url }}">
+        {%- if section.settings.logo != blank -%}
+          <img src="{{ section.settings.logo | image_url: width: 180 }}" alt="{{ shop.name }}" height="30">
+        {%- else -%}
+          <span class="dot">{% render 'gummy-bear', color: '#FF3B5C' %}</span> {{ shop.name }}
+        {%- endif -%}
+      </a>
+      <div class="navlinks">
+        {%- for link in section.settings.menu.links -%}
+          <a href="{{ link.url }}">{{ link.title }}</a>
+        {%- endfor -%}
+      </div>
+      <div class="navactions">
+        <button class="menu-btn" data-menu-btn aria-label="Open menu" aria-expanded="false">☰</button>
+        <a class="cart-pill" href="{{ routes.cart_url }}">Cart · {{ cart.item_count }}</a>
+      </div>
+    </nav>
+    <div class="mobile-nav gummy" data-mobile-nav>
+      {%- for link in section.settings.menu.links -%}
+        <a href="{{ link.url }}">{{ link.title }}</a>
+      {%- endfor -%}
+      <a href="{{ routes.cart_url }}">Cart · {{ cart.item_count }}</a>
+    </div>
+  </div>
+</header>
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    { "type": "image_picker", "id": "logo", "label": "Logo image (optional)" },
+    { "type": "link_list", "id": "menu", "label": "Menu", "default": "main-menu" }
+  ]
+}
+{% endschema %}

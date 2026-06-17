@@ -1,0 +1,23 @@
+{%- comment -%} Param: product (object), bear_color (fallback color) {%- endcomment -%}
+{%- assign bc = bear_color | default: '#3D8BFF' -%}
+<a href="{{ product.url }}" class="pcard gummy reveal">
+  <div class="ph">
+    {%- if product.compare_at_price > product.price -%}
+      <span class="badge">Sale</span>
+    {%- endif -%}
+    {%- if product.featured_media -%}
+      <img src="{{ product.featured_media | image_url: width: 600 }}" alt="{{ product.featured_media.alt | escape | default: product.title }}" loading="lazy" width="600" height="600">
+    {%- else -%}
+      <span class="chain"></span>
+      <span class="bearbox" data-bear="{{ bc }}"></span>
+    {%- endif -%}
+  </div>
+  <h3>{{ product.title }}</h3>
+  <div class="price">
+    {{ product.price | money }}
+    {%- if product.compare_at_price > product.price -%}<s>{{ product.compare_at_price | money }}</s>{%- endif -%}
+  </div>
+  {%- if product.metafields.reviews.rating.value != blank -%}
+    <div class="rev"><span class="stars">★★★★★</span> {{ product.metafields.reviews.rating_count }} reviews</div>
+  {%- endif -%}
+</a>

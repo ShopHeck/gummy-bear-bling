@@ -1,0 +1,13 @@
+<div class="section">
+  <div class="wrap">
+    <div class="empty gummy" style="padding:70px 20px;max-width:640px;margin:0 auto">
+      <div class="big" style="width:130px;margin:0 auto 16px">{% render 'gummy-bear', color: '#FF8A3D', size: '130px' %}</div>
+      <h1 style="font-size:2rem">This page melted</h1>
+      <p class="muted" style="margin:.5rem 0 1.2rem">We couldn't find what you're looking for — but the bears are still here.</p>
+      <a href="{{ routes.all_products_collection_url }}" class="btn">Shop the bears</a>
+    </div>
+  </div>
+</div>
+{% schema %}
+{ "name": "404", "settings": [] }
+{% endschema %}

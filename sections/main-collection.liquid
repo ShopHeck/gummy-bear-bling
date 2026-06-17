@@ -1,0 +1,26 @@
+<div class="coll-head">
+  <div class="wrap">
+    <h1>{{ collection.title }}</h1>
+    {%- if collection.description != blank -%}<div class="rte muted" style="margin-top:.6rem">{{ collection.description }}</div>{%- endif -%}
+  </div>
+</div>
+<div class="section" style="padding-top:18px">
+  <div class="wrap">
+    {%- paginate collection.products by 12 -%}
+      <div class="grid">
+        {%- assign colors = '#3D8BFF,#FF3B5C,#A55CFF,#FF8A3D,#46CF7C,#FF6FB0,#FFCE2E,#34D6D6' | split: ',' -%}
+        {%- for product in collection.products -%}
+          {% render 'product-card', product: product, bear_color: colors[forloop.index0] %}
+        {%- else -%}
+          <p class="muted">No products yet — check back soon.</p>
+        {%- endfor -%}
+      </div>
+      {%- if paginate.pages > 1 -%}
+        <nav class="pagination">{{ paginate | default_pagination }}</nav>
+      {%- endif -%}
+    {%- endpaginate -%}
+  </div>
+</div>
+{% schema %}
+{ "name": "Collection", "settings": [] }
+{% endschema %}

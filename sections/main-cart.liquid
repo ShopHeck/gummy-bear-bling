@@ -1,0 +1,49 @@
+<div class="section">
+  <div class="wrap" style="max-width:840px">
+    <div class="sec-head"><h2>Your cart</h2></div>
+    {%- if cart.item_count > 0 -%}
+      {%- form 'cart', cart, class: 'cart-wrap gummy' -%}
+        {%- for item in cart.items -%}
+          <div class="cart-row">
+            <div class="thumb">
+              {%- if item.image -%}<img src="{{ item.image | image_url: width: 168 }}" alt="{{ item.title | escape }}">
+              {%- else -%}<span class="bearbox" data-bear="#FF6FB0"></span>{%- endif -%}
+            </div>
+            <div>
+              <h4>{{ item.product.title }}</h4>
+              {%- unless item.variant.title contains 'Default' -%}<div class="variant">{{ item.variant.title }}</div>{%- endunless -%}
+              <div class="variant">{{ item.final_price | money }} each</div>
+              <div class="qty" data-qty style="margin-top:.5rem;transform:scale(.9);transform-origin:left">
+                <button type="button" data-qty-down aria-label="Decrease">−</button>
+                <input type="text" name="updates[]" value="{{ item.quantity }}" inputmode="numeric" aria-label="Quantity">
+                <button type="button" data-qty-up aria-label="Increase">+</button>
+              </div>
+            </div>
+            <div style="text-align:right;font-family:var(--font-display);font-weight:700">
+              {{ item.final_line_price | money }}
+              <br><a href="{{ item.url_to_remove }}" class="muted" style="font-size:.78rem;font-weight:500">Remove</a>
+            </div>
+          </div>
+        {%- endfor -%}
+        <div class="cart-totals">
+          <button type="submit" name="update" class="btn ghost">Update cart</button>
+          <div style="text-align:right">
+            <div class="muted" style="font-size:.85rem">Subtotal · free US shipping</div>
+            <div class="sum">{{ cart.total_price | money }}</div>
+          </div>
+        </div>
+        <button type="submit" name="checkout" class="btn full lg" style="margin-top:1rem">Checkout securely 🔒</button>
+      {%- endform -%}
+    {%- else -%}
+      <div class="empty gummy" style="padding:60px 20px">
+        <div class="big">{% render 'gummy-bear', color: '#A55CFF', size: '120px' %}</div>
+        <h3 style="font-size:1.5rem">Your cart is empty</h3>
+        <p class="muted" style="margin:.5rem 0 1.2rem">Let's fix that — your bears are waiting.</p>
+        <a href="{{ routes.all_products_collection_url }}" class="btn">Shop the bears</a>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+{% schema %}
+{ "name": "Cart", "settings": [] }
+{% endschema %}

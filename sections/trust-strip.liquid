@@ -1,0 +1,38 @@
+<div class="section" style="padding-top:6px;padding-bottom:6px">
+  <div class="wrap">
+    <div class="trust-strip gummy reveal">
+      {%- for block in section.blocks -%}
+        <div class="trust-item" {{ block.shopify_attributes }}>
+          <div class="ic">{{ block.settings.icon }}</div>
+          <b>{{ block.settings.title }}</b>
+          <span>{{ block.settings.text }}</span>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Trust strip",
+  "blocks": [
+    {
+      "type": "item", "name": "Trust item",
+      "settings": [
+        { "type": "text", "id": "icon", "label": "Emoji icon", "default": "💛" },
+        { "type": "text", "id": "title", "label": "Title", "default": "Loved & guaranteed" },
+        { "type": "text", "id": "text", "label": "Text", "default": "30 days, no-fuss returns" }
+      ]
+    }
+  ],
+  "max_blocks": 4,
+  "presets": [{
+    "name": "Trust strip",
+    "blocks": [
+      { "type": "item", "settings": { "icon": "🤚", "title": "Handmade to order", "text": "Each bear hand-poured & sanded" } },
+      { "type": "item", "settings": { "icon": "✨", "title": "Won't turn you green", "text": "Tarnish-proof gold-plated steel" } },
+      { "type": "item", "settings": { "icon": "🚚", "title": "Free US shipping", "text": "Ships in 1–2 business days" } },
+      { "type": "item", "settings": { "icon": "💛", "title": "Loved & guaranteed", "text": "30 days, no-fuss returns" } }
+    ]
+  }]
+}
+{% endschema %}

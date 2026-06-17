@@ -1,0 +1,65 @@
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <a class="logo" href="{{ routes.root_url }}" style="font-size:1.2rem">
+          <span class="dot" style="width:24px;height:24px">{% render 'gummy-bear', color: '#FF3B5C' %}</span> {{ shop.name }}
+        </a>
+        <p class="muted" style="font-size:.9rem;margin-top:.6rem;max-width:30ch">{{ section.settings.blurb }}</p>
+        <div class="pay" aria-label="Accepted payments">
+          {%- for type in shop.enabled_payment_types -%}
+            {{ type | payment_type_svg_tag: class: 'payment-icon' }}
+          {%- else -%}
+            <span>VISA</span><span>MC</span><span>AMEX</span><span>PayPal</span><span>Apple Pay</span><span>Shop Pay</span>
+          {%- endfor -%}
+        </div>
+      </div>
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'menu' -%}
+          <div {{ block.shopify_attributes }}>
+            <h4>{{ block.settings.heading }}</h4>
+            <ul>
+              {%- for link in block.settings.menu.links -%}
+                <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+              {%- endfor -%}
+            </ul>
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+      <div>
+        <h4>Follow</h4>
+        <ul>
+          {%- if settings.social_tiktok != blank -%}<li><a href="{{ settings.social_tiktok }}">TikTok</a></li>{%- endif -%}
+          {%- if settings.social_instagram != blank -%}<li><a href="{{ settings.social_instagram }}">Instagram</a></li>{%- endif -%}
+          {%- if settings.social_pinterest != blank -%}<li><a href="{{ settings.social_pinterest }}">Pinterest</a></li>{%- endif -%}
+          {%- if settings.social_facebook != blank -%}<li><a href="{{ settings.social_facebook }}">Facebook</a></li>{%- endif -%}
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">© {{ 'now' | date: '%Y' }} {{ shop.name }} · 30-day happiness guarantee · Free US shipping</div>
+  </div>
+</footer>
+{% schema %}
+{
+  "name": "Footer",
+  "settings": [
+    { "type": "textarea", "id": "blurb", "label": "About blurb", "default": "Hand-poured resin gummy bear jewelry, made with love in Tampa, Florida." }
+  ],
+  "blocks": [
+    {
+      "type": "menu",
+      "name": "Menu column",
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Heading", "default": "Shop" },
+        { "type": "link_list", "id": "menu", "label": "Menu" }
+      ]
+    }
+  ],
+  "default": {
+    "blocks": [
+      { "type": "menu", "settings": { "heading": "Shop" } },
+      { "type": "menu", "settings": { "heading": "Help" } }
+    ]
+  }
+}
+{% endschema %}

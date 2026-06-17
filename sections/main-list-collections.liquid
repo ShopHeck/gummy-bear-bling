@@ -1,0 +1,20 @@
+<div class="section">
+  <div class="wrap">
+    <div class="coll-head"><h1>Shop all collections</h1></div>
+    <div class="grid cols-3">
+      {%- for collection in collections -%}
+        <a href="{{ collection.url }}" class="pcard gummy reveal">
+          <div class="ph">
+            {%- if collection.featured_image -%}<img src="{{ collection.featured_image | image_url: width: 600 }}" alt="{{ collection.title | escape }}">
+            {%- else -%}<span class="bearbox" data-bear="#A55CFF"></span>{%- endif -%}
+          </div>
+          <h3>{{ collection.title }}</h3>
+          <div class="rev">{{ collection.products_count }} items</div>
+        </a>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+{% schema %}
+{ "name": "Collections list", "settings": [] }
+{% endschema %}

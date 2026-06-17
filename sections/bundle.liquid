@@ -1,0 +1,42 @@
+<div class="section" id="bundle">
+  <div class="wrap">
+    <div class="bundle gummy reveal">
+      <div>
+        <span class="eyebrow">{{ section.settings.eyebrow }}</span>
+        <h2 style="font-size:clamp(1.8rem,4vw,2.6rem)">{{ section.settings.heading }}</h2>
+        <p class="muted" style="font-weight:500;margin-top:.4rem">{{ section.settings.text }}</p>
+        <div class="priceline">
+          <span class="now">{{ section.settings.price }}</span>
+          <span class="was">{{ section.settings.compare }}</span>
+          <span class="save">{{ section.settings.save_text }}</span>
+        </div>
+        <div class="pickrow" data-bundle-picker></div>
+        <a href="{{ section.settings.cta_link | default: routes.all_products_collection_url }}" class="btn" style="margin-top:1.2rem">{{ section.settings.cta_text }}</a>
+      </div>
+      <div>
+        <div class="slots" data-bundle-slots>
+          <div class="slot"><span class="ph-num">1</span><span class="bearbox" data-bear data-filled="1"></span></div>
+          <div class="slot"><span class="ph-num">2</span><span class="bearbox" data-bear data-filled="1"></span></div>
+          <div class="slot"><span class="ph-num">3</span><span class="bearbox" data-bear data-filled="1"></span></div>
+        </div>
+        <p class="center muted" style="font-size:.82rem;font-weight:600">Mix necklaces & bracelets · free US shipping</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Build a stack",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Build a stack" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Three bears, better together" },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "Layer your favorites and save — way more fun than one. Tap colors below to fill your stack." },
+    { "type": "text", "id": "price", "label": "Bundle price", "default": "$45" },
+    { "type": "text", "id": "compare", "label": "Compare price", "default": "$60" },
+    { "type": "text", "id": "save_text", "label": "Save badge", "default": "Save $15" },
+    { "type": "text", "id": "cta_text", "label": "Button text", "default": "Add stack to cart" },
+    { "type": "url", "id": "cta_link", "label": "Button link" }
+  ],
+  "presets": [{ "name": "Build a stack" }]
+}
+{% endschema %}

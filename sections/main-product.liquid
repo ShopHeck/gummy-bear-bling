@@ -1,0 +1,105 @@
+<div class="section">
+  <div class="wrap">
+    <div class="pdp">
+      <div class="pdp-media">
+        <div class="pdp-main-img gummy" data-pdp-main>
+          {%- if product.featured_media -%}
+            <img src="{{ product.featured_media | image_url: width: 900 }}" alt="{{ product.featured_media.alt | escape | default: product.title }}" width="900" height="900">
+          {%- else -%}
+            <span class="bearbox" data-bear="#3D8BFF"></span>
+          {%- endif -%}
+        </div>
+        {%- if product.media.size > 1 -%}
+          <div class="pdp-thumbs" data-pdp-thumbs>
+            {%- for media in product.media limit: 8 -%}
+              <button class="{% if forloop.first %}active{% endif %}" data-src="{{ media | image_url: width: 900 }}" aria-label="View image {{ forloop.index }}">
+                <img src="{{ media | image_url: width: 140 }}" alt="" loading="lazy">
+              </button>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+      </div>
+
+      <div class="pdp-info">
+        <span class="eyebrow">{{ product.type | default: 'Gummy bear jewelry' }}</span>
+        <h1>{{ product.title }}</h1>
+        <div class="pdp-rev"><span class="stars">★★★★★</span> Loved by the gummy bear gang</div>
+
+        <div class="pdp-price">
+          {{ product.price | money }}
+          {%- if product.compare_at_price > product.price -%}
+            <s>{{ product.compare_at_price | money }}</s>
+            <span class="save">Save {{ product.compare_at_price | minus: product.price | money }}</span>
+          {%- endif -%}
+        </div>
+
+        {%- form 'product', product, id: 'pdp-add' -%}
+          {%- unless product.has_only_default_variant -%}
+            {%- for option in product.options_with_values -%}
+              <div class="opt">
+                <label class="opt-label" for="opt-{{ forloop.index }}">{{ option.name }}</label>
+                <select id="opt-{{ forloop.index }}" class="product-option" data-index="option{{ forloop.index }}">
+                  {%- for value in option.values -%}
+                    <option value="{{ value | escape }}" {% if option.selected_value == value %}selected{% endif %}>{{ value }}</option>
+                  {%- endfor -%}
+                </select>
+              </div>
+            {%- endfor -%}
+          {%- endunless -%}
+
+          <select name="id" class="product-variant-id" style="display:none">
+            {%- for variant in product.variants -%}
+              <option value="{{ variant.id }}" {% if variant == product.selected_or_first_available_variant %}selected{% endif %} {% unless variant.available %}disabled{% endunless %}>
+                {{ variant.title }} — {{ variant.price | money }}
+              </option>
+            {%- endfor -%}
+          </select>
+
+          <div class="pdp-actions">
+            <div class="qty" data-qty>
+              <button type="button" data-qty-down aria-label="Decrease quantity">−</button>
+              <input type="text" name="quantity" value="1" inputmode="numeric" aria-label="Quantity">
+              <button type="button" data-qty-up aria-label="Increase quantity">+</button>
+            </div>
+            <button type="submit" name="add" class="btn lg" style="flex:1" {% unless product.available %}disabled{% endunless %}>
+              {%- if product.available -%}Add to cart{%- else -%}Sold out{%- endif -%}
+            </button>
+          </div>
+        {%- endform -%}
+
+        <div class="reassure">
+          <div><span class="ic">🚚</span> Free US shipping · ships in 1–2 business days</div>
+          <div><span class="ic">↩︎</span> 30-day happiness guarantee — love it or send it back</div>
+          <div><span class="ic">🔒</span> Secure checkout · Shop Pay, Apple Pay & cards</div>
+        </div>
+
+        {%- if product.description != blank -%}
+          <div class="pdp-desc rte">{{ product.description }}</div>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function(){
+    var form = document.getElementById('pdp-add');
+    if(!form) return;
+    var hidden = form.querySelector('.product-variant-id');
+    var selects = form.querySelectorAll('.product-option');
+    var variants = {{ product.variants | json }};
+    function update(){
+      var chosen = [];
+      selects.forEach(function(s){ chosen.push(s.value); });
+      for(var i=0;i<variants.length;i++){
+        var v = variants[i], match = true;
+        for(var j=0;j<chosen.length;j++){ if(v.options[j] !== chosen[j]) match=false; }
+        if(match){ hidden.value = v.id; break; }
+      }
+    }
+    selects.forEach(function(s){ s.addEventListener('change', update); });
+  })();
+</script>
+{% schema %}
+{ "name": "Product", "settings": [] }
+{% endschema %}

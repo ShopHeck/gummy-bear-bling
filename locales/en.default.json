@@ -1,0 +1,13 @@
+{
+  "general": {
+    "search": { "placeholder": "Search for bears…", "title": "Search" },
+    "404": { "title": "This page melted" },
+    "newsletter_form": { "email_placeholder": "you@email.com", "confirmation": "Thanks for subscribing" }
+  },
+  "products": {
+    "product": { "add_to_cart": "Add to cart", "sold_out": "Sold out", "on_sale": "Sale" }
+  },
+  "cart": {
+    "general": { "title": "Your cart", "empty": "Your cart is empty", "checkout": "Checkout", "subtotal": "Subtotal", "update": "Update cart" }
+  }
+}
