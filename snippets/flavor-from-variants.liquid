@@ -1,0 +1,58 @@
+{%- comment -%}
+  Renders flavor swatches generated from a product's colour/flavour variants.
+  Params:
+    product : the product whose variants become flavors
+    mode    : 'link'  → <a> swatches that deep-link to ?variant=ID (Tap a Flavor)
+              'stack' → <button> swatches carrying the variant id (Build a Stack)
+{%- endcomment -%}
+{%- assign vp = product -%}
+{%- assign color_opt = blank -%}
+{%- assign color_pos = 0 -%}
+{%- for opt in vp.options_with_values -%}
+  {%- assign on = opt.name | downcase -%}
+  {%- assign is_color = false -%}
+  {%- if on contains 'color' -%}{%- assign is_color = true -%}{%- endif -%}
+  {%- if on contains 'colour' -%}{%- assign is_color = true -%}{%- endif -%}
+  {%- if on contains 'flavor' -%}{%- assign is_color = true -%}{%- endif -%}
+  {%- if on contains 'flavour' -%}{%- assign is_color = true -%}{%- endif -%}
+  {%- if is_color and color_opt == blank -%}
+    {%- assign color_opt = opt -%}
+    {%- assign color_pos = forloop.index0 -%}
+  {%- endif -%}
+{%- endfor -%}
+{%- if color_opt == blank -%}
+  {%- assign color_opt = vp.options_with_values.first -%}
+  {%- assign color_pos = 0 -%}
+{%- endif -%}
+{%- assign rendered = 0 -%}
+{%- for value in color_opt.values -%}
+  {%- assign vmatch = blank -%}
+  {%- for v in vp.variants -%}
+    {%- if vmatch == blank and v.options[color_pos] == value -%}{%- assign vmatch = v -%}{%- endif -%}
+  {%- endfor -%}
+  {%- if vmatch != blank -%}
+    {%- capture hex -%}{% render 'color-hex', name: value %}{%- endcapture -%}
+    {%- assign hex = hex | strip -%}
+    {%- assign vurl = vp.url | append: '?variant=' | append: vmatch.id -%}
+    {%- if mode == 'stack' -%}
+      <button type="button" class="swatch" data-stack-flavor
+        style="background:{{ hex }}"
+        data-color="{{ hex }}"
+        data-label="{{ value | escape }}"
+        data-variant-id="{{ vmatch.id }}"
+        {% unless vmatch.available %}disabled aria-disabled="true" title="{{ value | escape }} — sold out"{% endunless %}
+        aria-label="Add {{ value | escape }} to your stack"></button>
+    {%- else -%}
+      <a class="swatch{% if rendered == 0 %} active{% endif %}"
+        href="{{ vurl }}"
+        style="background:{{ hex }}"
+        data-flavor
+        data-color="{{ hex }}"
+        data-label="{{ value | escape }}"
+        data-desc="{{ vmatch.price | money }}"
+        data-url="{{ vurl }}"
+        aria-label="{{ value | escape }} necklace"></a>
+    {%- endif -%}
+    {%- assign rendered = rendered | plus: 1 -%}
+  {%- endif -%}
+{%- endfor -%}

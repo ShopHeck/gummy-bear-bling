@@ -190,7 +190,8 @@
 
       flavorBtns.forEach(function (b) {
         b.addEventListener("click", function () {
-          addFlavor({ color: b.getAttribute("data-color"), label: b.getAttribute("data-label") });
+          if (b.disabled) return;
+          addFlavor({ color: b.getAttribute("data-color"), label: b.getAttribute("data-label"), id: b.getAttribute("data-variant-id") || null });
         });
       });
 
@@ -207,7 +208,7 @@
             var match = flavorBtns.filter(function (b) {
               return (b.getAttribute("data-label") || "").toLowerCase() === lbl;
             })[0];
-            if (match) addFlavor({ color: match.getAttribute("data-color"), label: match.getAttribute("data-label") });
+            if (match && !match.disabled) addFlavor({ color: match.getAttribute("data-color"), label: match.getAttribute("data-label"), id: match.getAttribute("data-variant-id") || null });
           });
         }
       } catch (e) {}
@@ -221,27 +222,40 @@
             if (hint) { hint.classList.remove("nudge"); void hint.offsetWidth; hint.classList.add("nudge"); }
             return;
           }
-          if (cta.dataset.variantId) { /* AJAX add the bundle product with flavor properties */
-            e.preventDefault();
+          var picks = state.filter(Boolean);
+          var allHaveVariant = picks.length === slots.length && picks.every(function (s) { return s.id; });
+
+          function submitItems(items, fallbackUrl) {
             cta.classList.add("is-loading");
-            var properties = {};
-            state.forEach(function (s, i) { properties["Bear " + (i + 1)] = s.label; });
-            var items = [{ id: parseInt(cta.dataset.variantId, 10), quantity: 1, properties: properties }];
             if (window.GBBCart) {
               window.GBBCart.addItems(items)
                 .then(function () { cta.classList.remove("is-loading"); })
-                .catch(function () { window.location = cta.dataset.cartUrl || "/cart"; });
+                .catch(function () { window.location = fallbackUrl; });
             } else {
               fetch((cta.dataset.addUrl || "/cart/add") + ".js", {
                 method: "POST",
                 headers: { "Content-Type": "application/json", "Accept": "application/json" },
                 body: JSON.stringify({ items: items })
-              }).then(function () {
-                window.location = cta.dataset.cartUrl || "/cart";
-              }).catch(function () {
-                window.location = cta.dataset.cartUrl || "/cart";
-              });
+              }).then(function () { window.location = cta.dataset.cartUrl || "/cart"; })
+                .catch(function () { window.location = fallbackUrl; });
             }
+          }
+
+          if (cta.dataset.variantMode === "true" && allHaveVariant) {
+            /* add the 3 chosen variants as real line items (merge duplicates) */
+            e.preventDefault();
+            var counts = {};
+            picks.forEach(function (s) { counts[s.id] = (counts[s.id] || 0) + 1; });
+            var variantItems = Object.keys(counts).map(function (id) {
+              return { id: parseInt(id, 10), quantity: counts[id] };
+            });
+            submitItems(variantItems, cta.dataset.cartUrl || "/cart");
+          } else if (cta.dataset.variantId) {
+            /* fixed-price bundle product: add once with each pick saved as a property */
+            e.preventDefault();
+            var properties = {};
+            state.forEach(function (s, i) { properties["Bear " + (i + 1)] = s.label; });
+            submitItems([{ id: parseInt(cta.dataset.variantId, 10), quantity: 1, properties: properties }], cta.dataset.cartUrl || "/cart");
           }
           /* else: link mode — href already carries ?stack=, allow default navigation */
         });
@@ -491,6 +505,42 @@
           if (typeof pdpForm.requestSubmit === "function") pdpForm.requestSubmit();
           else pdpForm.dispatchEvent(new Event("submit", { cancelable: true, bubbles: true }));
         });
+      }
+    }
+
+    /* ---- product recommendations (Shopify recommendations API) ----
+       The section server-renders a collection fallback first; here we lazily
+       fetch behaviour-based recommendations and swap them in when they arrive. */
+    var rec = document.querySelector("[data-recommendations]");
+    if (rec && rec.dataset.url && rec.dataset.productId) {
+      var fetchRecs = function () {
+        var url = rec.dataset.url +
+          "?section_id=" + encodeURIComponent(rec.dataset.sectionId) +
+          "&product_id=" + encodeURIComponent(rec.dataset.productId) +
+          "&limit=" + encodeURIComponent(rec.dataset.limit || 4) +
+          "&intent=" + encodeURIComponent(rec.dataset.intent || "related");
+        fetch(url, { headers: { "Accept": "text/html" } })
+          .then(function (r) { return r.ok ? r.text() : Promise.reject(); })
+          .then(function (html) {
+            var doc = new DOMParser().parseFromString(html, "text/html");
+            var fresh = doc.querySelector("[data-recommendations]");
+            if (!fresh || !fresh.querySelector(".pcard")) return; /* keep fallback if no recs */
+            rec.innerHTML = fresh.innerHTML;
+            rec.querySelectorAll("[data-bear]").forEach(function (el) {
+              if (el.dataset.filled) return;
+              el.innerHTML = bearSVG(el.getAttribute("data-bear") || "var(--cherry)");
+            });
+            rec.querySelectorAll(".reveal").forEach(function (el) { el.classList.add("in"); });
+          })
+          .catch(function () { /* keep server-rendered fallback */ });
+      };
+      if ("IntersectionObserver" in window) {
+        var recIO = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) { if (e.isIntersecting) { recIO.disconnect(); fetchRecs(); } });
+        }, { rootMargin: "400px" });
+        recIO.observe(rec);
+      } else {
+        fetchRecs();
       }
     }
 

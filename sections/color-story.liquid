@@ -9,21 +9,39 @@
       <div class="stage"><span class="bearbox" data-colorstory-stage style="width:min(280px,72%)"></span></div>
       <div>
         <div class="flavors" data-colorstory-row>
-          {%- assign fallback = section.settings.cta_link | default: routes.all_products_collection_url -%}
-          {%- for block in section.blocks -%}
-            {%- assign fp = block.settings.product -%}
-            {%- if fp != blank -%}{%- assign furl = fp.url -%}{%- else -%}{%- assign furl = fallback -%}{%- endif -%}
-            <a class="swatch{% if forloop.first %} active{% endif %}"
-               href="{{ furl }}"
-               style="background:{{ block.settings.color }}"
-               data-flavor
-               data-color="{{ block.settings.color }}"
-               data-label="{{ block.settings.label | escape }}"
-               data-desc="{{ block.settings.description | escape }}"
-               data-url="{{ furl }}"
-               aria-label="{{ block.settings.label | escape }} — shop this necklace"
-               {{ block.shopify_attributes }}></a>
-          {%- endfor -%}
+          {%- if section.settings.product != blank -%}
+            {%- assign fallback = section.settings.product.url -%}
+          {%- else -%}
+            {%- assign fallback = section.settings.cta_link | default: routes.all_products_collection_url -%}
+          {%- endif -%}
+          {%- if section.settings.product != blank -%}
+            {% render 'flavor-from-variants', product: section.settings.product, mode: 'link' %}
+          {%- else -%}
+            {%- for block in section.blocks -%}
+              {%- assign fp = block.settings.product -%}
+              {%- assign furl = fallback -%}
+              {%- if fp != blank -%}
+                {%- assign furl = fp.url -%}
+                {%- if block.settings.variant != blank -%}
+                  {%- assign want = block.settings.variant | downcase -%}
+                  {%- for v in fp.variants -%}
+                    {%- assign vt = v.title | downcase -%}
+                    {%- if vt contains want -%}{%- assign furl = fp.url | append: '?variant=' | append: v.id -%}{%- break -%}{%- endif -%}
+                  {%- endfor -%}
+                {%- endif -%}
+              {%- endif -%}
+              <a class="swatch{% if forloop.first %} active{% endif %}"
+                 href="{{ furl }}"
+                 style="background:{{ block.settings.color }}"
+                 data-flavor
+                 data-color="{{ block.settings.color }}"
+                 data-label="{{ block.settings.label | escape }}"
+                 data-desc="{{ block.settings.description | escape }}"
+                 data-url="{{ furl }}"
+                 aria-label="{{ block.settings.label | escape }} — shop this necklace"
+                 {{ block.shopify_attributes }}></a>
+            {%- endfor -%}
+          {%- endif -%}
         </div>
         <p class="flavor-name" data-colorstory-name></p>
         <a href="{{ fallback }}" class="btn" data-colorstory-cta data-label="{{ section.settings.cta_text }}" style="margin-top:.4rem">{{ section.settings.cta_text }}</a>
@@ -39,7 +57,10 @@
     { "type": "text", "id": "heading", "label": "Heading", "default": "Which one's yours?" },
     { "type": "text", "id": "subheading", "label": "Subheading", "default": "Tap a flavor to meet the bear — then shop that exact necklace." },
     { "type": "text", "id": "cta_text", "label": "Button text", "info": "Use %s as a placeholder for the flavor name, e.g. \"Shop the %s bear\".", "default": "Shop the %s bear" },
-    { "type": "url", "id": "cta_link", "label": "Fallback link", "info": "Used when a flavor has no product assigned." }
+    { "type": "header", "content": "Variant mode (recommended)" },
+    { "type": "product", "id": "product", "label": "Necklace product", "info": "Pick one necklace with colour/flavour variants. Each variant becomes a swatch that links straight to that variant. When set, this replaces the manual flavors below." },
+    { "type": "header", "content": "Manual flavors (fallback)" },
+    { "type": "url", "id": "cta_link", "label": "Fallback link", "info": "Used when no necklace product is set above and a flavor has no product." }
   ],
   "blocks": [
     {
@@ -49,7 +70,8 @@
         { "type": "color", "id": "color", "label": "Bear color", "default": "#3D8BFF" },
         { "type": "text", "id": "label", "label": "Flavor name", "default": "Blueberry" },
         { "type": "text", "id": "description", "label": "Short description", "default": "cool, classic, goes with everything." },
-        { "type": "product", "id": "product", "label": "Matched necklace", "info": "The individual necklace this color links to." }
+        { "type": "product", "id": "product", "label": "Matched necklace", "info": "The individual necklace this color links to." },
+        { "type": "text", "id": "variant", "label": "Variant (optional)", "info": "Variant name to link to, e.g. \"Cherry\". Leave blank to link to the product." }
       ]
     }
   ],

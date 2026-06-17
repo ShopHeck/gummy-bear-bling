@@ -1,3 +1,4 @@
+{%- assign variant_product = section.settings.variant_product -%}
 {%- assign bundle_product = section.settings.product -%}
 <div class="section" id="bundle">
   <div class="wrap">
@@ -9,7 +10,7 @@
         <h2 style="font-size:clamp(1.8rem,4vw,2.6rem)">{{ section.settings.heading }}</h2>
         <p class="muted" style="font-weight:500;margin-top:.4rem">{{ section.settings.text }}</p>
         <div class="priceline">
-          {%- if bundle_product != blank -%}
+          {%- if variant_product == blank and bundle_product != blank -%}
             <span class="now">{{ bundle_product.price | money }}</span>
             {%- if bundle_product.compare_at_price > bundle_product.price -%}
               <span class="was">{{ bundle_product.compare_at_price | money }}</span>
@@ -19,28 +20,38 @@
               <span class="save">{{ section.settings.save_text }}</span>
             {%- endif -%}
           {%- else -%}
-            <span class="now">{{ section.settings.price }}</span>
-            <span class="was">{{ section.settings.compare }}</span>
-            <span class="save">{{ section.settings.save_text }}</span>
+            {%- if section.settings.price != blank -%}<span class="now">{{ section.settings.price }}</span>{%- endif -%}
+            {%- if section.settings.compare != blank -%}<span class="was">{{ section.settings.compare }}</span>{%- endif -%}
+            {%- if section.settings.save_text != blank -%}<span class="save">{{ section.settings.save_text }}</span>{%- endif -%}
           {%- endif -%}
         </div>
         <div class="pickrow" data-stack-picker>
-          {%- for block in section.blocks -%}
-            <button type="button" class="swatch" data-stack-flavor
-              style="background:{{ block.settings.color }}"
-              data-color="{{ block.settings.color }}"
-              data-label="{{ block.settings.label | escape }}"
-              aria-label="Add {{ block.settings.label | escape }} to your stack"
-              {{ block.shopify_attributes }}></button>
-          {%- endfor -%}
+          {%- if variant_product != blank -%}
+            {% render 'flavor-from-variants', product: variant_product, mode: 'stack' %}
+          {%- else -%}
+            {%- for block in section.blocks -%}
+              <button type="button" class="swatch" data-stack-flavor
+                style="background:{{ block.settings.color }}"
+                data-color="{{ block.settings.color }}"
+                data-label="{{ block.settings.label | escape }}"
+                aria-label="Add {{ block.settings.label | escape }} to your stack"
+                {{ block.shopify_attributes }}></button>
+            {%- endfor -%}
+          {%- endif -%}
         </div>
         <p class="bundle-hint muted" data-stack-hint>Pick 3 flavors to fill your stack.</p>
-        {%- assign bundle_url = bundle_product.url | default: section.settings.cta_link | default: routes.all_products_collection_url -%}
+        {%- if variant_product != blank -%}
+          {%- assign bundle_url = variant_product.url -%}
+        {%- else -%}
+          {%- assign bundle_url = bundle_product.url | default: section.settings.cta_link | default: routes.all_products_collection_url -%}
+        {%- endif -%}
         <a href="{{ bundle_url }}"
            class="btn is-disabled"
            data-stack-cta
            aria-disabled="true"
-           {%- if bundle_product != blank and bundle_product.available -%}
+           {%- if variant_product != blank -%}
+             data-variant-mode="true"
+           {%- elsif bundle_product != blank and bundle_product.available -%}
              data-variant-id="{{ bundle_product.selected_or_first_available_variant.id }}"
            {%- else -%}
              data-base-url="{{ bundle_url }}"
@@ -69,8 +80,11 @@
     { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Build a stack" },
     { "type": "text", "id": "heading", "label": "Heading", "default": "Three bears, better together" },
     { "type": "textarea", "id": "text", "label": "Text", "default": "Layer your favorites and save — way more fun than one. Tap colors below to fill your stack." },
-    { "type": "product", "id": "product", "label": "Bundle product", "info": "The fixed-price 3-bear bundle product (assign it the \"Build-a-stack bundle\" template). When set, the button adds it to cart with each pick saved as a property." },
-    { "type": "header", "content": "Fallback pricing", "info": "Shown only when no bundle product is assigned." },
+    { "type": "header", "content": "Variant mode (recommended)" },
+    { "type": "product", "id": "variant_product", "label": "Necklace product", "info": "Pick one necklace with colour/flavour variants. Each variant becomes a flavor; the chosen 3 are added to cart as real variant line items. Set up a Shopify automatic discount (e.g. buy 3 → $15 off) to apply the bundle saving." },
+    { "type": "header", "content": "Fixed-price bundle mode (alternative)" },
+    { "type": "product", "id": "product", "label": "Bundle product", "info": "A single fixed-price 3-bear bundle product (assign it the \"Build-a-stack bundle\" template). Used only when no necklace product is set above; picks are saved as line-item properties." },
+    { "type": "header", "content": "Price display & fallback" },
     { "type": "text", "id": "price", "label": "Bundle price", "default": "$45" },
     { "type": "text", "id": "compare", "label": "Compare price", "default": "$60" },
     { "type": "text", "id": "save_text", "label": "Save badge", "default": "Save $15" },
