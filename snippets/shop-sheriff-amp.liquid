@@ -1,0 +1,35 @@
+{% comment %}Managed by ShopSheriff Shopify app{% endcomment %}
+
+{% if template contains 'product' %}
+  {% unless product.handle.size > 0 %}
+    {% assign denyAmp = true %}
+  {% endunless %}
+  {% assign amp_path = '/products/' | append: product.handle %}
+{% endif %}
+<script type="text/javascript">
+var a = window.performance && window.performance.mark;
+if (a) {
+  window.performance.mark("shopsheriff.amp-snippet.start");
+}
+var doc = document;
+var redirect = "/cart" === window.location.pathname
+&& (doc.referrer.includes("ampproject.org") || doc.referrer.includes("/a/s/") )
+&& !doc.location.search.includes("utm");
+
+if(redirect) {
+  var f = doc.location.search ? "&" : "?";
+  window.location =
+    window.location.origin
+  + window.location.pathname
+  + f
+  + "utm_source=shopsheriff&utm_medium=amp&utm_campaign=shopsheriff&utm_content=add-to-cart";
+}
+if (a) {
+  window.performance.mark("shopsheriff.amp-snippet.end");
+}
+      </script>
+{% unless denyAmp %}
+{% if amp_path %}
+   <link rel="amphtml" href="{{ 'https://' | append: 'gummybearbling.com/a/s' | append: amp_path  }}">
+{% endif %}
+{% endunless %}
