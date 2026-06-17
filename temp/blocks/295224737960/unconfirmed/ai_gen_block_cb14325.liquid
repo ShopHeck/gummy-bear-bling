@@ -1,6 +1,505 @@
+{% doc %}
+  @prompt
+    a interactive FAQ section that matches the website theme and is prefilled with relevant questions and answers
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-faq-container-{{ ai_gen_id }} {
+    display: block;
+    width: {{ block.settings.desktop_width_percent }}%;
+    max-width: 100%;
+    padding: 40px 20px;
+    background-color: {{ block.settings.background_color }};
+  }
+
+  .ai-faq-header-{{ ai_gen_id }} {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .ai-faq-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.title_size }}px;
+    color: {{ block.settings.title_color }};
+    margin: 0 0 12px;
+  }
+
+  .ai-faq-subtitle-{{ ai_gen_id }} {
+    font-size: {{ block.settings.subtitle_size }}px;
+    color: {{ block.settings.subtitle_color }};
+    margin: 0;
+  }
+
+  .ai-faq-list-{{ ai_gen_id }} {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .ai-faq-item-{{ ai_gen_id }} {
+    border: 1px solid {{ block.settings.border_color }};
+    border-radius: {{ block.settings.border_radius }}px;
+    margin-bottom: 12px;
+    overflow: hidden;
+    background-color: {{ block.settings.item_background_color }};
+    transition: all 0.3s ease;
+  }
+
+  .ai-faq-item-{{ ai_gen_id }}:hover {
+    border-color: {{ block.settings.accent_color }};
+  }
+
+  .ai-faq-question-{{ ai_gen_id }} {
+    width: 100%;
+    padding: 20px 24px;
+    background: none;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    font-size: {{ block.settings.question_size }}px;
+    font-weight: 600;
+    color: {{ block.settings.question_color }};
+    transition: color 0.3s ease;
+  }
+
+  .ai-faq-question-{{ ai_gen_id }}:hover {
+    color: {{ block.settings.accent_color }};
+  }
+
+  .ai-faq-icon-{{ ai_gen_id }} {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    transition: transform 0.3s ease;
+    color: {{ block.settings.accent_color }};
+  }
+
+  .ai-faq-item-{{ ai_gen_id }}.active .ai-faq-icon-{{ ai_gen_id }} {
+    transform: rotate(180deg);
+  }
+
+  .ai-faq-answer-{{ ai_gen_id }} {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+    padding: 0 24px;
+  }
+
+  .ai-faq-item-{{ ai_gen_id }}.active .ai-faq-answer-{{ ai_gen_id }} {
+    max-height: 500px;
+    padding: 0 24px 20px;
+  }
+
+  .ai-faq-answer-content-{{ ai_gen_id }} {
+    font-size: {{ block.settings.answer_size }}px;
+    color: {{ block.settings.answer_color }};
+    line-height: 1.6;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-faq-container-{{ ai_gen_id }} {
+      padding: 30px 16px;
+    }
+
+    .ai-faq-title-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.title_size }}px * 0.8);
+    }
+
+    .ai-faq-subtitle-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.subtitle_size }}px * 0.9);
+    }
+
+    .ai-faq-question-{{ ai_gen_id }} {
+      padding: 16px 20px;
+      font-size: calc({{ block.settings.question_size }}px * 0.9);
+    }
+
+    .ai-faq-answer-{{ ai_gen_id }} {
+      padding: 0 20px;
+    }
+
+    .ai-faq-item-{{ ai_gen_id }}.active .ai-faq-answer-{{ ai_gen_id }} {
+      padding: 0 20px 16px;
+    }
+  }
+{% endstyle %}
+
+<faq-accordion-{{ ai_gen_id }} class="ai-faq-container-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-faq-header-{{ ai_gen_id }}">
+    {% if block.settings.title != blank %}
+      <h2 class="ai-faq-title-{{ ai_gen_id }}">{{ block.settings.title }}</h2>
+    {% endif %}
+    {% if block.settings.subtitle != blank %}
+      <p class="ai-faq-subtitle-{{ ai_gen_id }}">{{ block.settings.subtitle }}</p>
+    {% endif %}
+  </div>
+
+  <div class="ai-faq-list-{{ ai_gen_id }}">
+    {% if block.settings.question_1 != blank %}
+      <div class="ai-faq-item-{{ ai_gen_id }}">
+        <button class="ai-faq-question-{{ ai_gen_id }}" aria-expanded="false">
+          <span>{{ block.settings.question_1 }}</span>
+          <svg class="ai-faq-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+        <div class="ai-faq-answer-{{ ai_gen_id }}">
+          <div class="ai-faq-answer-content-{{ ai_gen_id }}">{{ block.settings.answer_1 }}</div>
+        </div>
+      </div>
+    {% endif %}
+
+    {% if block.settings.question_2 != blank %}
+      <div class="ai-faq-item-{{ ai_gen_id }}">
+        <button class="ai-faq-question-{{ ai_gen_id }}" aria-expanded="false">
+          <span>{{ block.settings.question_2 }}</span>
+          <svg class="ai-faq-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+        <div class="ai-faq-answer-{{ ai_gen_id }}">
+          <div class="ai-faq-answer-content-{{ ai_gen_id }}">{{ block.settings.answer_2 }}</div>
+        </div>
+      </div>
+    {% endif %}
+
+    {% if block.settings.question_3 != blank %}
+      <div class="ai-faq-item-{{ ai_gen_id }}">
+        <button class="ai-faq-question-{{ ai_gen_id }}" aria-expanded="false">
+          <span>{{ block.settings.question_3 }}</span>
+          <svg class="ai-faq-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+        <div class="ai-faq-answer-{{ ai_gen_id }}">
+          <div class="ai-faq-answer-content-{{ ai_gen_id }}">{{ block.settings.answer_3 }}</div>
+        </div>
+      </div>
+    {% endif %}
+
+    {% if block.settings.question_4 != blank %}
+      <div class="ai-faq-item-{{ ai_gen_id }}">
+        <button class="ai-faq-question-{{ ai_gen_id }}" aria-expanded="false">
+          <span>{{ block.settings.question_4 }}</span>
+          <svg class="ai-faq-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+        <div class="ai-faq-answer-{{ ai_gen_id }}">
+          <div class="ai-faq-answer-content-{{ ai_gen_id }}">{{ block.settings.answer_4 }}</div>
+        </div>
+      </div>
+    {% endif %}
+
+    {% if block.settings.question_5 != blank %}
+      <div class="ai-faq-item-{{ ai_gen_id }}">
+        <button class="ai-faq-question-{{ ai_gen_id }}" aria-expanded="false">
+          <span>{{ block.settings.question_5 }}</span>
+          <svg class="ai-faq-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+        <div class="ai-faq-answer-{{ ai_gen_id }}">
+          <div class="ai-faq-answer-content-{{ ai_gen_id }}">{{ block.settings.answer_5 }}</div>
+        </div>
+      </div>
+    {% endif %}
+
+    {% if block.settings.question_6 != blank %}
+      <div class="ai-faq-item-{{ ai_gen_id }}">
+        <button class="ai-faq-question-{{ ai_gen_id }}" aria-expanded="false">
+          <span>{{ block.settings.question_6 }}</span>
+          <svg class="ai-faq-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+        <div class="ai-faq-answer-{{ ai_gen_id }}">
+          <div class="ai-faq-answer-content-{{ ai_gen_id }}">{{ block.settings.answer_6 }}</div>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</faq-accordion-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class FaqAccordion{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.items = this.querySelectorAll('.ai-faq-item-{{ ai_gen_id }}');
+        this.setupEventListeners();
+      }
+
+      setupEventListeners() {
+        this.items.forEach((item) => {
+          const button = item.querySelector('.ai-faq-question-{{ ai_gen_id }}');
+          
+          button.addEventListener('click', () => {
+            const isActive = item.classList.contains('active');
+            
+            if (isActive) {
+              item.classList.remove('active');
+              button.setAttribute('aria-expanded', 'false');
+            } else {
+              item.classList.add('active');
+              button.setAttribute('aria-expanded', 'true');
+            }
+          });
+        });
+      }
+    }
+
+    customElements.define('faq-accordion-{{ ai_gen_id }}', FaqAccordion{{ ai_gen_id }});
+  })();
+</script>
+
 {% schema %}
- {
-   "name": "AI_Block",
-   "tag": "shopify-ai-generated-block"
- }
+{
+  "name": "FAQ accordion",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Frequently Asked Questions"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Find answers to common questions about our jewelry"
+    },
+    {
+      "type": "header",
+      "content": "Question 1"
+    },
+    {
+      "type": "text",
+      "id": "question_1",
+      "label": "Question",
+      "default": "What materials are your gummy bear jewelry made from?"
+    },
+    {
+      "type": "textarea",
+      "id": "answer_1",
+      "label": "Answer",
+      "default": "Our gummy bear jewelry is crafted from high-quality materials including 14k gold, sterling silver, and genuine gemstones. Each piece is carefully designed to capture the playful spirit of gummy bears while maintaining luxury quality."
+    },
+    {
+      "type": "header",
+      "content": "Question 2"
+    },
+    {
+      "type": "text",
+      "id": "question_2",
+      "label": "Question",
+      "default": "How do I care for my gummy bear jewelry?"
+    },
+    {
+      "type": "textarea",
+      "id": "answer_2",
+      "label": "Answer",
+      "default": "To keep your jewelry sparkling, clean it gently with a soft cloth and mild soap. Avoid harsh chemicals and store pieces separately in a jewelry box. Remove jewelry before swimming, exercising, or sleeping to prevent damage."
+    },
+    {
+      "type": "header",
+      "content": "Question 3"
+    },
+    {
+      "type": "text",
+      "id": "question_3",
+      "label": "Question",
+      "default": "What is your return and exchange policy?"
+    },
+    {
+      "type": "textarea",
+      "id": "answer_3",
+      "label": "Answer",
+      "default": "We offer a 30-day return policy for unworn items in original condition. Custom or personalized pieces are final sale. Contact our customer service team to initiate a return or exchange."
+    },
+    {
+      "type": "header",
+      "content": "Question 4"
+    },
+    {
+      "type": "text",
+      "id": "question_4",
+      "label": "Question",
+      "default": "Do you offer international shipping?"
+    },
+    {
+      "type": "textarea",
+      "id": "answer_4",
+      "label": "Answer",
+      "default": "Yes! We ship worldwide. Shipping times vary by location, typically 5-10 business days for domestic orders and 10-20 business days for international orders. All orders are fully insured and trackable."
+    },
+    {
+      "type": "header",
+      "content": "Question 5"
+    },
+    {
+      "type": "text",
+      "id": "question_5",
+      "label": "Question",
+      "default": "Can I customize or personalize my jewelry?"
+    },
+    {
+      "type": "textarea",
+      "id": "answer_5",
+      "label": "Answer",
+      "default": "Absolutely! We offer engraving services and custom design options for many of our pieces. Contact us with your ideas and our team will work with you to create something special."
+    },
+    {
+      "type": "header",
+      "content": "Question 6"
+    },
+    {
+      "type": "text",
+      "id": "question_6",
+      "label": "Question",
+      "default": "Is my jewelry hypoallergenic?"
+    },
+    {
+      "type": "textarea",
+      "id": "answer_6",
+      "label": "Answer",
+      "default": "Our sterling silver and 14k gold pieces are hypoallergenic and safe for sensitive skin. If you have specific metal allergies, please check the product description or contact us before purchasing."
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "item_background_color",
+      "label": "Item background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border",
+      "default": "#e5e5e5"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "default": "#FE02F5"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title",
+      "default": "#34202C"
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Subtitle",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "question_color",
+      "label": "Question",
+      "default": "#34202C"
+    },
+    {
+      "type": "color",
+      "id": "answer_color",
+      "label": "Answer",
+      "default": "#666666"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Title size",
+      "min": 20,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size",
+      "label": "Subtitle size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "question_size",
+      "label": "Question size",
+      "min": 14,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "answer_size",
+      "label": "Answer size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 15
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAQ accordion"
+    }
+  ]
+}
 {% endschema %}
