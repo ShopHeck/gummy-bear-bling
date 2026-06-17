@@ -1,10 +1,31 @@
-{%- assign source = collections[section.settings.collection] -%}
-{%- unless source != blank and source.products_count > 0 -%}
-  {%- assign source = product.collections.first -%}
-{%- endunless -%}
-{%- if source != blank and source.products_count > 1 -%}
-  <div class="section">
-    <div class="wrap">
+{%- comment -%}
+  "Complete the stack" — uses Shopify's Product Recommendations API.
+  On first paint we server-render a fallback from the product's collection
+  (instant, works with no JS). theme.js then fetches behaviour-based
+  recommendations via the Section Rendering API and swaps them in.
+{%- endcomment -%}
+{%- assign limit = section.settings.count | default: 4 -%}
+<div class="section"
+     data-recommendations
+     data-url="{{ routes.product_recommendations_url }}"
+     data-section-id="{{ section.id }}"
+     data-product-id="{{ product.id }}"
+     data-limit="{{ limit }}"
+     data-intent="{{ section.settings.intent }}">
+  <div class="wrap">
+    {%- if recommendations.performed -%}
+      {%- assign rec_products = recommendations.products -%}
+      {%- assign rec_count = recommendations.products_count -%}
+    {%- else -%}
+      {%- assign source = collections[section.settings.collection] -%}
+      {%- unless source != blank and source.products_count > 0 -%}
+        {%- assign source = product.collections.first -%}
+      {%- endunless -%}
+      {%- assign rec_products = source.products -%}
+      {%- assign rec_count = source.products_count -%}
+    {%- endif -%}
+
+    {%- if rec_count > 0 -%}
       <div class="sec-head reveal">
         <span class="eyebrow">{{ section.settings.eyebrow }}</span>
         <h2>{{ section.settings.heading }}</h2>
@@ -12,24 +33,32 @@
       <div class="grid">
         {%- assign colors = '#3D8BFF,#FF3B5C,#A55CFF,#FF8A3D,#46CF7C,#FF6FB0,#FFCE2E,#34D6D6' | split: ',' -%}
         {%- assign shown = 0 -%}
-        {%- for p in source.products -%}
-          {%- if p.id != product.id and shown < section.settings.count -%}
+        {%- for p in rec_products -%}
+          {%- if p.id != product.id and shown < limit -%}
             {% render 'product-card', product: p, bear_color: colors[forloop.index0] %}
             {%- assign shown = shown | plus: 1 -%}
           {%- endif -%}
         {%- endfor -%}
       </div>
-    </div>
+    {%- endif -%}
   </div>
-{%- endif -%}
+</div>
 {% schema %}
 {
   "name": "Related products",
   "settings": [
     { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Complete the stack" },
     { "type": "text", "id": "heading", "label": "Heading", "default": "Goes great with…" },
-    { "type": "collection", "id": "collection", "label": "Collection (optional)", "info": "Defaults to the product's own collection." },
-    { "type": "range", "id": "count", "label": "Products to show", "min": 2, "max": 8, "step": 1, "default": 4 }
+    {
+      "type": "select", "id": "intent", "label": "Recommendation type", "default": "related",
+      "options": [
+        { "value": "related", "label": "Related products" },
+        { "value": "complementary", "label": "Complementary (frequently bought together)" }
+      ],
+      "info": "Powered by Shopify's recommendation engine."
+    },
+    { "type": "collection", "id": "collection", "label": "Fallback collection (optional)", "info": "Shown instantly before recommendations load. Defaults to the product's own collection." },
+    { "type": "range", "id": "count", "label": "Products to show", "min": 2, "max": 10, "step": 1, "default": 4 }
   ],
   "presets": [{ "name": "Related products" }]
 }

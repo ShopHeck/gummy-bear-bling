@@ -494,6 +494,42 @@
       }
     }
 
+    /* ---- product recommendations (Shopify recommendations API) ----
+       The section server-renders a collection fallback first; here we lazily
+       fetch behaviour-based recommendations and swap them in when they arrive. */
+    var rec = document.querySelector("[data-recommendations]");
+    if (rec && rec.dataset.url && rec.dataset.productId) {
+      var fetchRecs = function () {
+        var url = rec.dataset.url +
+          "?section_id=" + encodeURIComponent(rec.dataset.sectionId) +
+          "&product_id=" + encodeURIComponent(rec.dataset.productId) +
+          "&limit=" + encodeURIComponent(rec.dataset.limit || 4) +
+          "&intent=" + encodeURIComponent(rec.dataset.intent || "related");
+        fetch(url, { headers: { "Accept": "text/html" } })
+          .then(function (r) { return r.ok ? r.text() : Promise.reject(); })
+          .then(function (html) {
+            var doc = new DOMParser().parseFromString(html, "text/html");
+            var fresh = doc.querySelector("[data-recommendations]");
+            if (!fresh || !fresh.querySelector(".pcard")) return; /* keep fallback if no recs */
+            rec.innerHTML = fresh.innerHTML;
+            rec.querySelectorAll("[data-bear]").forEach(function (el) {
+              if (el.dataset.filled) return;
+              el.innerHTML = bearSVG(el.getAttribute("data-bear") || "var(--cherry)");
+            });
+            rec.querySelectorAll(".reveal").forEach(function (el) { el.classList.add("in"); });
+          })
+          .catch(function () { /* keep server-rendered fallback */ });
+      };
+      if ("IntersectionObserver" in window) {
+        var recIO = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) { if (e.isIntersecting) { recIO.disconnect(); fetchRecs(); } });
+        }, { rootMargin: "400px" });
+        recIO.observe(rec);
+      } else {
+        fetchRecs();
+      }
+    }
+
     /* ---- scroll reveal ---- */
     if ("IntersectionObserver" in window) {
       var io = new IntersectionObserver(function (entries) {
