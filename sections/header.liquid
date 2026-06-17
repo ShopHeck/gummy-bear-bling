@@ -15,14 +15,14 @@
       </div>
       <div class="navactions">
         <button class="menu-btn" data-menu-btn aria-label="Open menu" aria-expanded="false">☰</button>
-        <a class="cart-pill" href="{{ routes.cart_url }}">Cart · {{ cart.item_count }}</a>
+        <a class="cart-pill" href="{{ routes.cart_url }}" data-cart-open>Cart · <span data-cart-count>{{ cart.item_count }}</span></a>
       </div>
     </nav>
     <div class="mobile-nav gummy" data-mobile-nav>
       {%- for link in section.settings.menu.links -%}
         <a href="{{ link.url }}">{{ link.title }}</a>
       {%- endfor -%}
-      <a href="{{ routes.cart_url }}">Cart · {{ cart.item_count }}</a>
+      <a href="{{ routes.cart_url }}" data-cart-open>Cart · <span data-cart-count>{{ cart.item_count }}</span></a>
     </div>
   </div>
 </header>

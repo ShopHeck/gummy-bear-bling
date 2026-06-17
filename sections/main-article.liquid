@@ -1,0 +1,38 @@
+<div class="section">
+  <div class="wrap" style="max-width:760px">
+    <div class="coll-head" style="padding-bottom:14px">
+      <p class="eyebrow">{{ article.published_at | date: '%B %d, %Y' }}{% if article.author != blank %} · {{ article.author }}{% endif %}</p>
+      <h1>{{ article.title }}</h1>
+    </div>
+    {%- if article.image -%}
+      <img class="article-hero gummy" src="{{ article.image | image_url: width: 1000 }}"
+           srcset="{{ article.image | image_url: width: 500 }} 500w, {{ article.image | image_url: width: 1000 }} 1000w, {{ article.image | image_url: width: 1400 }} 1400w"
+           sizes="(max-width:760px) 100vw, 760px"
+           alt="{{ article.title | escape }}" width="1000" height="560" fetchpriority="high">
+    {%- endif -%}
+    <div class="page-shell gummy" style="margin-top:18px">
+      <div class="rte">{{ article.content }}</div>
+    </div>
+
+    {%- if blog.comments_enabled? -%}
+      <div class="rte" style="margin-top:28px">
+        {%- if article.comments_count > 0 -%}
+          <h3>{{ article.comments_count }} comment{% if article.comments_count != 1 %}s{% endif %}</h3>
+          {%- for comment in article.comments -%}
+            <div class="gummy" style="padding:16px;margin:.8rem 0">
+              <p>{{ comment.content }}</p>
+              <p class="muted" style="font-size:.85rem;margin-top:.4rem">— {{ comment.author }}</p>
+            </div>
+          {%- endfor -%}
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="center" style="margin-top:28px">
+      <a href="{{ blog.url }}" class="btn ghost">← Back to {{ blog.title }}</a>
+    </div>
+  </div>
+</div>
+{% schema %}
+{ "name": "Article", "settings": [] }
+{% endschema %}

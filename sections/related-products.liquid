@@ -1,0 +1,36 @@
+{%- assign source = collections[section.settings.collection] -%}
+{%- unless source != blank and source.products_count > 0 -%}
+  {%- assign source = product.collections.first -%}
+{%- endunless -%}
+{%- if source != blank and source.products_count > 1 -%}
+  <div class="section">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="eyebrow">{{ section.settings.eyebrow }}</span>
+        <h2>{{ section.settings.heading }}</h2>
+      </div>
+      <div class="grid">
+        {%- assign colors = '#3D8BFF,#FF3B5C,#A55CFF,#FF8A3D,#46CF7C,#FF6FB0,#FFCE2E,#34D6D6' | split: ',' -%}
+        {%- assign shown = 0 -%}
+        {%- for p in source.products -%}
+          {%- if p.id != product.id and shown < section.settings.count -%}
+            {% render 'product-card', product: p, bear_color: colors[forloop.index0] %}
+            {%- assign shown = shown | plus: 1 -%}
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+{%- endif -%}
+{% schema %}
+{
+  "name": "Related products",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Complete the stack" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Goes great with…" },
+    { "type": "collection", "id": "collection", "label": "Collection (optional)", "info": "Defaults to the product's own collection." },
+    { "type": "range", "id": "count", "label": "Products to show", "min": 2, "max": 8, "step": 1, "default": 4 }
+  ],
+  "presets": [{ "name": "Related products" }]
+}
+{% endschema %}

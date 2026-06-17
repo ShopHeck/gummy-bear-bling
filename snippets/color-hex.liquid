@@ -1,0 +1,17 @@
+{%- comment -%} Maps a flavor/color option value to a gummy hex. Param: name {%- endcomment -%}
+{%- assign n = name | downcase | strip -%}
+{%- case n -%}
+{%- when 'cherry','red','strawberry','ruby' -%}#FF3B5C
+{%- when 'tangerine','orange' -%}#FF8A3D
+{%- when 'lemon','yellow' -%}#FFCE2E
+{%- when 'lime','green' -%}#46CF7C
+{%- when 'blueberry','blue' -%}#3D8BFF
+{%- when 'grape','purple','violet' -%}#A55CFF
+{%- when 'bubblegum','pink','pinkberry','rose' -%}#FF6FB0
+{%- when 'aqua','teal','mint','turquoise' -%}#34D6D6
+{%- when 'clear','crystal','frost' -%}#E8E8F0
+{%- when 'black','noir' -%}#4A3645
+{%- when 'white','snow' -%}#FFFFFF
+{%- when 'gold' -%}#D9A53B
+{%- else -%}#C9B7C4
+{%- endcase -%}

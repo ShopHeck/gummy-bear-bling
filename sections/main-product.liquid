@@ -4,7 +4,14 @@
       <div class="pdp-media">
         <div class="pdp-main-img gummy" data-pdp-main>
           {%- if product.featured_media -%}
-            <img src="{{ product.featured_media | image_url: width: 900 }}" alt="{{ product.featured_media.alt | escape | default: product.title }}" width="900" height="900">
+            <img src="{{ product.featured_media | image_url: width: 900 }}"
+                 srcset="{{ product.featured_media | image_url: width: 400 }} 400w,
+                         {{ product.featured_media | image_url: width: 600 }} 600w,
+                         {{ product.featured_media | image_url: width: 900 }} 900w,
+                         {{ product.featured_media | image_url: width: 1200 }} 1200w"
+                 sizes="(max-width:900px) 100vw, 50vw"
+                 alt="{{ product.featured_media.alt | escape | default: product.title }}"
+                 width="900" height="900" fetchpriority="high">
           {%- else -%}
             <span class="bearbox" data-bear="#3D8BFF"></span>
           {%- endif -%}
@@ -13,7 +20,7 @@
           <div class="pdp-thumbs" data-pdp-thumbs>
             {%- for media in product.media limit: 8 -%}
               <button class="{% if forloop.first %}active{% endif %}" data-src="{{ media | image_url: width: 900 }}" aria-label="View image {{ forloop.index }}">
-                <img src="{{ media | image_url: width: 140 }}" alt="" loading="lazy">
+                <img src="{{ media | image_url: width: 140 }}" alt="" loading="lazy" width="66" height="66">
               </button>
             {%- endfor -%}
           </div>
@@ -23,7 +30,14 @@
       <div class="pdp-info">
         <span class="eyebrow">{{ product.type | default: 'Gummy bear jewelry' }}</span>
         <h1>{{ product.title }}</h1>
-        <div class="pdp-rev"><span class="stars">★★★★★</span> Loved by the gummy bear gang</div>
+
+        {%- if settings.show_rating -%}
+          {%- if product.metafields.reviews.rating.value != blank -%}
+            <a href="#reviews" class="pdp-rev"><span class="stars">★★★★★</span> {{ product.metafields.reviews.rating.value }} · {{ product.metafields.reviews.rating_count }} reviews</a>
+          {%- else -%}
+            <a href="#reviews" class="pdp-rev"><span class="stars">★★★★★</span> {{ settings.rating_value }} · loved by {{ settings.rating_count }} customers</a>
+          {%- endif -%}
+        {%- endif -%}
 
         <div class="pdp-price">
           {{ product.price | money }}
@@ -33,16 +47,41 @@
           {%- endif -%}
         </div>
 
-        {%- form 'product', product, id: 'pdp-add' -%}
+        {%- form 'product', product, id: 'pdp-add', class: 'pdp-form' -%}
           {%- unless product.has_only_default_variant -%}
             {%- for option in product.options_with_values -%}
+              {%- assign optidx = forloop.index -%}
+              {%- assign oname = option.name | downcase -%}
+              {%- assign is_color = false -%}
+              {%- if oname contains 'color' or oname contains 'colour' or oname contains 'flavor' or oname contains 'flavour' -%}{%- assign is_color = true -%}{%- endif -%}
               <div class="opt">
-                <label class="opt-label" for="opt-{{ forloop.index }}">{{ option.name }}</label>
-                <select id="opt-{{ forloop.index }}" class="product-option" data-index="option{{ forloop.index }}">
-                  {%- for value in option.values -%}
-                    <option value="{{ value | escape }}" {% if option.selected_value == value %}selected{% endif %}>{{ value }}</option>
-                  {%- endfor -%}
-                </select>
+                <label class="opt-label" {% unless is_color %}for="opt-{{ optidx }}"{% endunless %}>
+                  {{ option.name }}{%- if is_color -%}: <span class="opt-current" data-opt-current="option{{ optidx }}">{{ option.selected_value }}</span>{%- endif -%}
+                </label>
+                {%- if is_color -%}
+                  <div class="opt-swatches" role="radiogroup" aria-label="{{ option.name | escape }}">
+                    {%- for value in option.values -%}
+                      {%- capture hex -%}{% render 'color-hex', name: value %}{%- endcapture -%}
+                      {%- assign selected = false -%}
+                      {%- if option.selected_value == value -%}{%- assign selected = true -%}{%- endif -%}
+                      <button type="button"
+                        class="opt-swatch{% if selected %} active{% endif %}"
+                        style="background:{{ hex | strip }}"
+                        data-swatch
+                        data-index="option{{ optidx }}"
+                        data-value="{{ value | escape }}"
+                        role="radio" aria-checked="{% if selected %}true{% else %}false{% endif %}"
+                        aria-label="{{ value | escape }}" title="{{ value | escape }}"></button>
+                    {%- endfor -%}
+                  </div>
+                  <input type="hidden" class="product-option" data-index="option{{ optidx }}" value="{{ option.selected_value | escape }}">
+                {%- else -%}
+                  <select id="opt-{{ optidx }}" class="product-option" data-index="option{{ optidx }}">
+                    {%- for value in option.values -%}
+                      <option value="{{ value | escape }}" {% if option.selected_value == value %}selected{% endif %}>{{ value }}</option>
+                    {%- endfor -%}
+                  </select>
+                {%- endif -%}
               </div>
             {%- endfor -%}
           {%- endunless -%}
@@ -61,7 +100,7 @@
               <input type="text" name="quantity" value="1" inputmode="numeric" aria-label="Quantity">
               <button type="button" data-qty-up aria-label="Increase quantity">+</button>
             </div>
-            <button type="submit" name="add" class="btn lg" style="flex:1" {% unless product.available %}disabled{% endunless %}>
+            <button type="submit" name="add" class="btn lg" data-add-btn style="flex:1" {% unless product.available %}disabled{% endunless %}>
               {%- if product.available -%}Add to cart{%- else -%}Sold out{%- endif -%}
             </button>
           </div>
@@ -70,7 +109,7 @@
         <div class="reassure">
           <div><span class="ic">🚚</span> Free US shipping · ships in 1–2 business days</div>
           <div><span class="ic">↩︎</span> 30-day happiness guarantee — love it or send it back</div>
-          <div><span class="ic">🔒</span> Secure checkout · Shop Pay, Apple Pay & cards</div>
+          <div><span class="ic">🔒</span> Secure checkout · Shop Pay, Apple Pay &amp; cards</div>
         </div>
 
         {%- if product.description != blank -%}
@@ -86,18 +125,34 @@
     var form = document.getElementById('pdp-add');
     if(!form) return;
     var hidden = form.querySelector('.product-variant-id');
-    var selects = form.querySelectorAll('.product-option');
+    var inputs = form.querySelectorAll('.product-option');
     var variants = {{ product.variants | json }};
     function update(){
       var chosen = [];
-      selects.forEach(function(s){ chosen.push(s.value); });
+      inputs.forEach(function(s){ chosen.push(s.value); });
       for(var i=0;i<variants.length;i++){
         var v = variants[i], match = true;
         for(var j=0;j<chosen.length;j++){ if(v.options[j] !== chosen[j]) match=false; }
         if(match){ hidden.value = v.id; break; }
       }
     }
-    selects.forEach(function(s){ s.addEventListener('change', update); });
+    inputs.forEach(function(s){ if(s.tagName === 'SELECT') s.addEventListener('change', update); });
+    form.querySelectorAll('[data-swatch]').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var idx = btn.getAttribute('data-index');
+        var val = btn.getAttribute('data-value');
+        var input = form.querySelector('.product-option[data-index="'+idx+'"]');
+        if(input){ input.value = val; }
+        form.querySelectorAll('[data-swatch][data-index="'+idx+'"]').forEach(function(s){
+          var on = s === btn;
+          s.classList.toggle('active', on);
+          s.setAttribute('aria-checked', on ? 'true' : 'false');
+        });
+        var cur = form.querySelector('[data-opt-current="'+idx+'"]');
+        if(cur) cur.textContent = val;
+        update();
+      });
+    });
   })();
 </script>
 {% schema %}
