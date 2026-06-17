@@ -16,10 +16,10 @@
         "heading": "Step into the gummy world",
         "subheading": "A little bear-shaped hit of nostalgia, hand-poured in resin and hung on tarnish-proof gold. Pick your flavor — get compliments everywhere you go.",
         "cta_text": "Shop the bears",
-        "cta_link": "",
+        "cta_link": "shopify://collections/best-sellers",
         "cta2_text": "Build a stack & save",
-        "cta2_link": "",
-        "rating_text": "4.1 from real customers"
+        "cta2_link": "shopify://products/gummy-bear-necklace",
+        "rating_text": "4.9 from real customers"
       }
     },
     "trust": {
@@ -85,7 +85,8 @@
             "color": "#3d8bff",
             "label": "Blueberry",
             "description": "cool, classic, goes with everything.",
-            "product": "gummy-bear-necklace"
+            "product": "gummy-bear-necklace",
+            "variant": ""
           }
         }
       },
@@ -97,6 +98,7 @@
         "heading": "Which one's yours?",
         "subheading": "Tap a flavor to meet the bear — then shop that exact necklace.",
         "cta_text": "Shop necklaces",
+        "product": "",
         "cta_link": "shopify://products/gummy-bear-necklace"
       }
     },
@@ -106,7 +108,7 @@
         "flavor_b3dBJx": {
           "type": "flavor",
           "settings": {
-            "color": "#FFFFFF",
+            "color": "#ffffff",
             "label": "Vanilla"
           }
         },
@@ -127,35 +129,35 @@
         "flavor_8zHwbj": {
           "type": "flavor",
           "settings": {
-            "color": "#FBFF00",
+            "color": "#fbff00",
             "label": "Lemon"
           }
         },
         "flavor_qtW6kR": {
           "type": "flavor",
           "settings": {
-            "color": "#ADFF3B",
+            "color": "#adff3b",
             "label": "Lime"
           }
         },
         "flavor_3Hn6te": {
           "type": "flavor",
           "settings": {
-            "color": "#FF8400",
+            "color": "#ff8400",
             "label": "Orange"
           }
         },
         "flavor_UDWVc7": {
           "type": "flavor",
           "settings": {
-            "color": "#833BFF",
+            "color": "#833bff",
             "label": "Grape"
           }
         },
         "flavor_PC4TX8": {
           "type": "flavor",
           "settings": {
-            "color": "#FE02F5",
+            "color": "#fe02f5",
             "label": "Watermelon"
           }
         },
@@ -169,7 +171,7 @@
         "flavor_yLCyHA": {
           "type": "flavor",
           "settings": {
-            "color": "#3B65FF",
+            "color": "#3b65ff",
             "label": "Blueberry"
           }
         }
@@ -190,6 +192,7 @@
         "eyebrow": "Build a stack",
         "heading": "Three bears, better together",
         "text": "Layer your favorites and save — way more fun than one. Tap colors below to fill your stack.",
+        "variant_product": "",
         "product": "build-your-3-bear-bundle",
         "price": "$45",
         "compare": "$60",
