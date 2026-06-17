@@ -2,7 +2,7 @@
   {
     "name": "theme_info",
     "theme_name": "Gummy World",
-    "theme_version": "1.0.0",
+    "theme_version": "1.1.0",
     "theme_author": "Gummy Bear Bling",
     "theme_documentation_url": "https://gummybearbling.com",
     "theme_support_url": "https://gummybearbling.com/pages/contact"
@@ -18,6 +18,24 @@
     "settings": [
       { "type": "color", "id": "accent_color", "label": "Accent / button color", "default": "#DC1A57" },
       { "type": "color", "id": "heading_color", "label": "Text color", "default": "#34202C" }
+    ]
+  },
+  {
+    "name": "Cart",
+    "settings": [
+      { "type": "checkbox", "id": "enable_cart_drawer", "label": "Enable slide-out cart drawer", "default": true },
+      { "type": "checkbox", "id": "enable_ajax_add", "label": "Add to cart without page reload", "default": true },
+      { "type": "number", "id": "free_shipping_threshold", "label": "Free shipping / reward threshold ($)", "info": "Shows a progress bar in the cart. Set 0 to show a simple 'free shipping' message instead.", "default": 0 },
+      { "type": "text", "id": "cart_promo_text", "label": "Cart promo text", "default": "✨ Build a 3-bear stack & save $15" },
+      { "type": "url", "id": "cart_promo_link", "label": "Cart promo link" }
+    ]
+  },
+  {
+    "name": "Reviews & rating",
+    "settings": [
+      { "type": "checkbox", "id": "show_rating", "label": "Show star rating", "default": true },
+      { "type": "text", "id": "rating_value", "label": "Average rating (0–5)", "default": "4.9" },
+      { "type": "text", "id": "rating_count", "label": "Number of reviews", "default": "2,000+" }
     ]
   },
   {

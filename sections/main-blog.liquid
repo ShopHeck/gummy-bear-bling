@@ -1,0 +1,41 @@
+<div class="coll-head">
+  <div class="wrap">
+    <h1>{{ blog.title }}</h1>
+    <p class="muted" style="margin-top:.4rem">Styling tips, new flavors & gummy bear stories.</p>
+  </div>
+</div>
+<div class="section" style="padding-top:18px">
+  <div class="wrap">
+    {%- paginate blog.articles by 12 -%}
+      <div class="grid cols-3">
+        {%- for article in blog.articles -%}
+          <a href="{{ article.url }}" class="pcard gummy reveal">
+            <div class="ph">
+              {%- if article.image -%}
+                <img src="{{ article.image | image_url: width: 600 }}"
+                     srcset="{{ article.image | image_url: width: 300 }} 300w, {{ article.image | image_url: width: 600 }} 600w"
+                     sizes="(max-width:900px) 45vw, 30vw"
+                     alt="{{ article.title | escape }}" loading="lazy" width="600" height="600">
+              {%- else -%}
+                <span class="bearbox" data-bear="#A55CFF"></span>
+              {%- endif -%}
+            </div>
+            <h3>{{ article.title }}</h3>
+            <div class="rev">{{ article.published_at | date: '%b %d, %Y' }}{% if article.author != blank %} · {{ article.author }}{% endif %}</div>
+            {%- if article.excerpt_or_content != blank -%}
+              <p class="muted" style="font-size:.88rem;margin-top:.4rem">{{ article.excerpt_or_content | strip_html | truncatewords: 18 }}</p>
+            {%- endif -%}
+          </a>
+        {%- else -%}
+          <p class="muted">No posts yet — check back soon.</p>
+        {%- endfor -%}
+      </div>
+      {%- if paginate.pages > 1 -%}
+        <nav class="pagination">{{ paginate | default_pagination }}</nav>
+      {%- endif -%}
+    {%- endpaginate -%}
+  </div>
+</div>
+{% schema %}
+{ "name": "Blog posts", "settings": [] }
+{% endschema %}

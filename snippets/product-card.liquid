@@ -6,7 +6,13 @@
       <span class="badge">Sale</span>
     {%- endif -%}
     {%- if product.featured_media -%}
-      <img src="{{ product.featured_media | image_url: width: 600 }}" alt="{{ product.featured_media.alt | escape | default: product.title }}" loading="lazy" width="600" height="600">
+      <img src="{{ product.featured_media | image_url: width: 600 }}"
+           srcset="{{ product.featured_media | image_url: width: 300 }} 300w,
+                   {{ product.featured_media | image_url: width: 450 }} 450w,
+                   {{ product.featured_media | image_url: width: 600 }} 600w"
+           sizes="(max-width:520px) 45vw, (max-width:900px) 45vw, 25vw"
+           alt="{{ product.featured_media.alt | escape | default: product.title }}"
+           loading="lazy" width="600" height="600">
     {%- else -%}
       <span class="chain"></span>
       <span class="bearbox" data-bear="{{ bc }}"></span>
@@ -19,5 +25,7 @@
   </div>
   {%- if product.metafields.reviews.rating.value != blank -%}
     <div class="rev"><span class="stars">★★★★★</span> {{ product.metafields.reviews.rating_count }} reviews</div>
+  {%- elsif settings.show_rating -%}
+    <div class="rev"><span class="stars">★★★★★</span> loved</div>
   {%- endif -%}
 </a>

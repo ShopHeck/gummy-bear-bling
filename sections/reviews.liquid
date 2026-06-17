@@ -3,7 +3,7 @@
     <div class="sec-head reveal">
       <span class="eyebrow">{{ section.settings.eyebrow }}</span>
       <h2>{{ section.settings.heading }}</h2>
-      <p><span class="stars" style="font-size:1.1rem">★★★★☆</span>&nbsp; {{ section.settings.rating_text }}</p>
+      {%- if settings.show_rating -%}<p><span class="stars" style="font-size:1.1rem">★★★★★</span>&nbsp; {{ settings.rating_value }} average · {{ settings.rating_count }} happy customers</p>{%- endif -%}
     </div>
     <div class="reviews">
       {%- assign avs = '#FF3B5C,#FF6FB0,#A55CFF,#3D8BFF,#46CF7C,#FF8A3D' | split: ',' -%}

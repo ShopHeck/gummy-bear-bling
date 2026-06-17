@@ -13,6 +13,14 @@
       "type": "main-product",
       "settings": {}
     },
+    "related": {
+      "type": "related-products",
+      "settings": {
+        "eyebrow": "Complete the stack",
+        "heading": "Goes great with…",
+        "count": 4
+      }
+    },
     "trust_strip_4AhBr6": {
       "type": "trust-strip",
       "blocks": {
@@ -143,6 +151,7 @@
   "order": [
     "main",
     "trust_strip_4AhBr6",
+    "related",
     "reviews_mYrtjr",
     "1781715912e6a48b44"
   ]

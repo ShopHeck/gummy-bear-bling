@@ -1,0 +1,41 @@
+{%- comment -%}
+  Slide-out cart drawer. Markup is the shell; line items, totals and the
+  free-shipping/reward bar are rendered client-side from /cart.js by theme.js.
+{%- endcomment -%}
+<div class="cd-overlay" data-cart-overlay hidden></div>
+<aside class="cart-drawer" data-cart-drawer aria-hidden="true" aria-label="Cart" role="dialog" aria-modal="true" tabindex="-1">
+  <header class="cd-head">
+    <h2 class="cd-title">Your stack <span class="cd-count" data-cart-count-label></span></h2>
+    <button type="button" class="cd-close" data-cart-close aria-label="Close cart">×</button>
+  </header>
+
+  <div class="cd-ship" data-cart-ship hidden>
+    <p class="cd-ship-msg" data-cart-ship-msg></p>
+    <div class="cd-ship-track"><span class="cd-ship-fill" data-cart-ship-fill></span></div>
+  </div>
+
+  <div class="cd-body" data-cart-body>
+    <div class="cd-empty" data-cart-empty>
+      <div class="big" style="width:96px;margin:0 auto 14px">{% render 'gummy-bear', color: '#A55CFF', size: '96px' %}</div>
+      <h3 style="font-size:1.3rem">Your cart is empty</h3>
+      <p class="muted" style="margin:.4rem 0 1rem">Let's fix that — your bears are waiting.</p>
+      <a href="{{ routes.all_products_collection_url }}" class="btn" data-cart-close>Shop the bears</a>
+    </div>
+    <ul class="cd-items" data-cart-items hidden></ul>
+  </div>
+
+  <footer class="cd-foot" data-cart-foot hidden>
+    {%- if settings.cart_promo_text != blank -%}
+      <a class="cd-promo" href="{{ settings.cart_promo_link | default: routes.all_products_collection_url }}">{{ settings.cart_promo_text }}</a>
+    {%- endif -%}
+    <div class="cd-totals">
+      <span>Subtotal</span>
+      <span class="cd-subtotal" data-cart-subtotal></span>
+    </div>
+    <p class="cd-note muted">Shipping &amp; taxes calculated at checkout · Free US shipping</p>
+    <form action="{{ routes.cart_url }}" method="post">
+      <button type="submit" name="checkout" class="btn full lg">Checkout securely 🔒</button>
+    </form>
+    <a href="{{ routes.cart_url }}" class="cd-view-cart">View full cart</a>
+  </footer>
+</aside>

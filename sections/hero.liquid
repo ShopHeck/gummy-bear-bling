@@ -11,8 +11,11 @@
       {%- endif -%}
     </div>
     <div class="hero-trust reveal">
-      <span><span class="stars">★★★★☆</span> {{ section.settings.rating_text }}</span>
-      <span>·</span><span>🇺🇸 Made in the USA</span>
+      {%- if settings.show_rating -%}
+        <span><span class="stars">★★★★★</span> {{ section.settings.rating_text }}</span>
+        <span>·</span>
+      {%- endif -%}
+      <span>🇺🇸 Made in the USA</span>
       <span>·</span><span>↩︎ 30-day happiness guarantee</span>
     </div>
   </div>
@@ -28,7 +31,7 @@
     { "type": "url", "id": "cta_link", "label": "Button link" },
     { "type": "text", "id": "cta2_text", "label": "Secondary button text", "default": "Build a stack & save" },
     { "type": "url", "id": "cta2_link", "label": "Secondary button link" },
-    { "type": "text", "id": "rating_text", "label": "Rating text", "default": "4.1 from real customers" }
+    { "type": "text", "id": "rating_text", "label": "Rating text", "default": "Loved by thousands of customers" }
   ],
   "presets": [{ "name": "Hero" }]
 }
