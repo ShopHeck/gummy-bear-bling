@@ -55,59 +55,156 @@
       });
     }
 
-    /* ---- color story ---- */
-    var stage = document.querySelector("[data-colorstory-stage]");
-    var row = document.querySelector("[data-colorstory-row]");
-    var nameEl = document.querySelector("[data-colorstory-name]");
-    if (stage && row) {
-      var flavors = [
-        ["--blueberry","Blueberry","cool, classic, goes with everything."],
-        ["--cherry","Cherry","bold and sweet — our most-gifted bear."],
-        ["--grape","Grape","dreamy purple, a festival favorite."],
-        ["--pinkberry","Bubblegum","soft pink Y2K nostalgia in a bear."],
-        ["--tangerine","Tangerine","sunny orange that pops on gold."],
-        ["--lemon","Lemon","bright, cheerful, impossible to miss."],
-        ["--lime","Lime","fresh green, a little bit retro."],
-        ["--aqua","Aqua","breezy teal for summer stacks."]
-      ];
-      flavors.forEach(function (f, i) {
-        var b = document.createElement("button");
-        b.className = "swatch" + (i === 0 ? " active" : "");
-        b.style.background = resolveColor("var(" + f[0] + ")");
-        b.setAttribute("aria-label", f[1]);
-        b.addEventListener("click", function () {
-          row.querySelectorAll(".swatch").forEach(function (s) { s.classList.remove("active"); });
-          b.classList.add("active");
-          stage.innerHTML = bearSVG("var(" + f[0] + ")");
-          if (nameEl) nameEl.innerHTML = "<b>" + f[1] + "</b> — " + f[2];
-        });
-        row.appendChild(b);
-      });
-      stage.innerHTML = bearSVG("var(" + flavors[0][0] + ")");
-      if (nameEl) nameEl.innerHTML = "<b>" + flavors[0][1] + "</b> — " + flavors[0][2];
-    }
+    /* ---- color story / "Tap a flavor" ----
+       Each swatch is a real <a> linking to the matched necklace, so it works
+       with no JS. With JS, tapping a swatch previews that flavor (bear + copy)
+       and points the main CTA at the matching product; the CTA is the buy path. */
+    document.querySelectorAll("[data-colorstory]").forEach(function (cs) {
+      var stage = cs.querySelector("[data-colorstory-stage]");
+      var nameEl = cs.querySelector("[data-colorstory-name]");
+      var cta = cs.querySelector("[data-colorstory-cta]");
+      var ctaLabel = cta ? (cta.getAttribute("data-label") || cta.textContent.trim()) : "";
+      var swatches = Array.prototype.slice.call(cs.querySelectorAll("[data-flavor]"));
+      if (!swatches.length) return;
 
-    /* ---- bundle picker ---- */
-    var slotsWrap = document.querySelector("[data-bundle-slots]");
-    var picker = document.querySelector("[data-bundle-picker]");
-    if (slotsWrap && picker) {
-      var slots = Array.prototype.slice.call(slotsWrap.querySelectorAll(".slot"));
-      var idx = 0;
-      PALETTE.forEach(function (p) {
-        var b = document.createElement("button");
-        b.className = "swatch";
-        b.style.background = resolveColor("var(" + p + ")");
-        b.setAttribute("aria-label", "Add " + p.replace("--", "") + " bear to stack");
-        b.addEventListener("click", function () {
-          var slot = slots[idx % slots.length];
-          slot.classList.add("filled");
-          var box = slot.querySelector("[data-bear]");
-          if (box) box.innerHTML = bearSVG("var(" + p + ")");
-          idx++;
+      function select(el) {
+        swatches.forEach(function (s) { s.classList.remove("active"); s.setAttribute("aria-current", "false"); });
+        el.classList.add("active");
+        el.setAttribute("aria-current", "true");
+        if (stage) stage.innerHTML = bearSVG(el.getAttribute("data-color"));
+        if (nameEl) {
+          var desc = el.getAttribute("data-desc");
+          nameEl.innerHTML = "<b>" + el.getAttribute("data-label") + "</b>" + (desc ? " — " + desc : "");
+        }
+        if (cta) {
+          var url = el.getAttribute("data-url");
+          if (url) cta.setAttribute("href", url);
+          cta.textContent = ctaLabel.replace("%s", el.getAttribute("data-label"));
+        }
+      }
+
+      swatches.forEach(function (el) {
+        el.addEventListener("click", function (e) {
+          e.preventDefault(); /* JS: preview only. Without JS the <a> navigates. */
+          select(el);
         });
-        picker.appendChild(b);
       });
+      select(swatches[0]);
+    });
+
+    /* ---- build-a-stack picker (homepage section + bundle product page) ----
+       Shared logic: pick flavors to fill N slots. On the homepage the CTA can
+       AJAX-add the bundle product (with each pick saved as a line-item property)
+       or deep-link to the bundle page; on the product page it drives the real
+       add-to-cart form. */
+    function initStack(root) {
+      var slotsWrap = root.querySelector("[data-stack-slots]");
+      var picker = root.querySelector("[data-stack-picker]");
+      if (!slotsWrap || !picker) return;
+
+      var slots = Array.prototype.slice.call(slotsWrap.querySelectorAll("[data-stack-slot]"));
+      var flavorBtns = Array.prototype.slice.call(picker.querySelectorAll("[data-stack-flavor]"));
+      var props = Array.prototype.slice.call(root.querySelectorAll("[data-stack-prop]"));
+      var hint = root.querySelector("[data-stack-hint]");
+      var cta = root.querySelector("[data-stack-cta]");
+      var submit = root.querySelector("[data-stack-submit]");
+      var state = slots.map(function () { return null; });
+
+      function render() {
+        slots.forEach(function (slot, i) {
+          var box = slot.querySelector("[data-bear]");
+          if (state[i]) {
+            slot.classList.add("filled");
+            slot.setAttribute("data-flavor-label", state[i].label);
+            if (box) box.innerHTML = bearSVG(state[i].color);
+          } else {
+            slot.classList.remove("filled");
+            slot.removeAttribute("data-flavor-label");
+            if (box) box.innerHTML = "";
+          }
+        });
+        props.forEach(function (p, i) { p.value = state[i] ? state[i].label : ""; });
+
+        var filled = state.filter(Boolean).length;
+        var remaining = slots.length - filled;
+        var full = remaining === 0;
+        if (hint) {
+          hint.textContent = full
+            ? "Your stack is ready! 🐻🐻🐻"
+            : "Pick " + remaining + " more flavor" + (remaining === 1 ? "" : "s") + " to fill your stack.";
+        }
+        if (submit) submit.disabled = !full;
+        if (cta) {
+          cta.classList.toggle("is-disabled", !full);
+          cta.setAttribute("aria-disabled", full ? "false" : "true");
+          if (cta.dataset.baseUrl) {
+            var labels = state.filter(Boolean).map(function (s) { return encodeURIComponent(s.label); });
+            var sep = cta.dataset.baseUrl.indexOf("?") > -1 ? "&" : "?";
+            cta.setAttribute("href", labels.length ? cta.dataset.baseUrl + sep + "stack=" + labels.join(",") : cta.dataset.baseUrl);
+          }
+        }
+      }
+
+      function addFlavor(f) {
+        var empty = state.indexOf(null);
+        if (empty === -1) return; /* full — ignore */
+        state[empty] = f;
+        render();
+      }
+
+      flavorBtns.forEach(function (b) {
+        b.addEventListener("click", function () {
+          addFlavor({ color: b.getAttribute("data-color"), label: b.getAttribute("data-label") });
+        });
+      });
+
+      slots.forEach(function (slot, i) {
+        slot.addEventListener("click", function () { if (state[i]) { state[i] = null; render(); } });
+      });
+
+      /* prefill from ?stack=cherry,grape,lemon (deep link from homepage teaser) */
+      try {
+        var pre = new URLSearchParams(window.location.search).get("stack");
+        if (pre) {
+          pre.split(",").forEach(function (lbl) {
+            lbl = decodeURIComponent(lbl).trim().toLowerCase();
+            var match = flavorBtns.filter(function (b) {
+              return (b.getAttribute("data-label") || "").toLowerCase() === lbl;
+            })[0];
+            if (match) addFlavor({ color: match.getAttribute("data-color"), label: match.getAttribute("data-label") });
+          });
+        }
+      } catch (e) {}
+
+      render();
+
+      if (cta) {
+        cta.addEventListener("click", function (e) {
+          if (state.indexOf(null) !== -1) { /* not full yet */
+            e.preventDefault();
+            if (hint) { hint.classList.remove("nudge"); void hint.offsetWidth; hint.classList.add("nudge"); }
+            return;
+          }
+          if (cta.dataset.variantId) { /* AJAX add the bundle product with flavor properties */
+            e.preventDefault();
+            cta.classList.add("is-loading");
+            var properties = {};
+            state.forEach(function (s, i) { properties["Bear " + (i + 1)] = s.label; });
+            fetch(cta.dataset.addUrl || "/cart/add.js", {
+              method: "POST",
+              headers: { "Content-Type": "application/json", "Accept": "application/json" },
+              body: JSON.stringify({ items: [{ id: parseInt(cta.dataset.variantId, 10), quantity: 1, properties: properties }] })
+            }).then(function () {
+              window.location = cta.dataset.cartUrl || "/cart";
+            }).catch(function () {
+              window.location = cta.dataset.cartUrl || "/cart";
+            });
+          }
+          /* else: link mode — href already carries ?stack=, allow default navigation */
+        });
+      }
     }
+    document.querySelectorAll("[data-stack]").forEach(initStack);
 
     /* ---- PDP media gallery ---- */
     var thumbs = document.querySelector("[data-pdp-thumbs]");

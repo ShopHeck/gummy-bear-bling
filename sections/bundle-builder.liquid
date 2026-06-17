@@ -1,0 +1,99 @@
+<div class="section">
+  <div class="wrap">
+    <div class="pdp bundle-builder" data-stack>
+      <div class="pdp-media">
+        <div class="pdp-main-img gummy">
+          <div class="bb-stage" data-stack-slots>
+            {%- for i in (1..3) -%}
+              <div class="slot" data-stack-slot>
+                <span class="ph-num">{{ i }}</span>
+                <span class="bearbox" data-bear data-filled="1"></span>
+                <span class="slot-x" aria-hidden="true">×</span>
+              </div>
+            {%- endfor -%}
+          </div>
+        </div>
+        <p class="center muted" style="font-size:.85rem;font-weight:600;margin-top:.8rem">Tap a slot to clear it</p>
+      </div>
+
+      <div class="pdp-info">
+        <span class="eyebrow">{{ product.type | default: 'Build your own stack' }}</span>
+        <h1>{{ product.title }}</h1>
+        <div class="pdp-rev"><span class="stars">★★★★★</span> Loved by the gummy bear gang</div>
+
+        <div class="pdp-price">
+          {{ product.price | money }}
+          {%- if product.compare_at_price > product.price -%}
+            <s>{{ product.compare_at_price | money }}</s>
+            <span class="save">Save {{ product.compare_at_price | minus: product.price | money }}</span>
+          {%- endif -%}
+        </div>
+
+        {%- if product.description != blank -%}
+          <div class="pdp-desc rte" style="margin-top:1rem">{{ product.description }}</div>
+        {%- endif -%}
+
+        <h3 class="bb-step" style="font-family:var(--font-display);margin:1.4rem 0 .6rem">1 · Pick a flavor for each bear</h3>
+        <div class="pickrow" data-stack-picker>
+          {%- for block in section.blocks -%}
+            <button type="button" class="swatch" data-stack-flavor
+              style="background:{{ block.settings.color }}"
+              data-color="{{ block.settings.color }}"
+              data-label="{{ block.settings.label | escape }}"
+              aria-label="Add {{ block.settings.label | escape }} to your stack"
+              {{ block.shopify_attributes }}></button>
+          {%- endfor -%}
+        </div>
+        <p class="bundle-hint muted" data-stack-hint style="margin-top:.7rem">Pick 3 flavors to fill your stack.</p>
+
+        {%- form 'product', product, id: 'bundle-add' -%}
+          <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+          <input type="hidden" name="properties[Bear 1]" data-stack-prop>
+          <input type="hidden" name="properties[Bear 2]" data-stack-prop>
+          <input type="hidden" name="properties[Bear 3]" data-stack-prop>
+          <div class="pdp-actions" style="margin-top:1.2rem">
+            <button type="submit" name="add" class="btn lg full" data-stack-submit disabled {% unless product.available %}disabled{% endunless %}>
+              {%- if product.available -%}Add stack to cart{%- else -%}Sold out{%- endif -%}
+            </button>
+          </div>
+        {%- endform -%}
+
+        <div class="reassure">
+          <div><span class="ic">🚚</span> Free US shipping · ships in 1–2 business days</div>
+          <div><span class="ic">↩︎</span> 30-day happiness guarantee — love it or send it back</div>
+          <div><span class="ic">🔒</span> Secure checkout · Shop Pay, Apple Pay &amp; cards</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Build-a-stack bundle",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "flavor",
+      "name": "Flavor",
+      "settings": [
+        { "type": "color", "id": "color", "label": "Bear color", "default": "#FF3B5C" },
+        { "type": "text", "id": "label", "label": "Flavor name", "default": "Cherry" }
+      ]
+    }
+  ],
+  "max_blocks": 12,
+  "presets": [{
+    "name": "Build-a-stack bundle",
+    "blocks": [
+      { "type": "flavor", "settings": { "color": "#FF3B5C", "label": "Cherry" } },
+      { "type": "flavor", "settings": { "color": "#FF8A3D", "label": "Tangerine" } },
+      { "type": "flavor", "settings": { "color": "#FFCE2E", "label": "Lemon" } },
+      { "type": "flavor", "settings": { "color": "#46CF7C", "label": "Lime" } },
+      { "type": "flavor", "settings": { "color": "#3D8BFF", "label": "Blueberry" } },
+      { "type": "flavor", "settings": { "color": "#A55CFF", "label": "Grape" } },
+      { "type": "flavor", "settings": { "color": "#FF6FB0", "label": "Bubblegum" } },
+      { "type": "flavor", "settings": { "color": "#34D6D6", "label": "Aqua" } }
+    ]
+  }]
+}
+{% endschema %}

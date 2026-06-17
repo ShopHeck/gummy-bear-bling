@@ -200,6 +200,20 @@ button{font-family:inherit}
 .priceline .save{background:var(--lemon);color:#5a4500;font-weight:700;font-size:.78rem;padding:.25rem .6rem;border-radius:999px;font-family:var(--font-display)}
 .pickrow{display:flex;gap:9px;flex-wrap:wrap}
 .pickrow .swatch{width:40px;height:40px}
+.slot{cursor:default}
+.slot.filled{cursor:pointer}
+.slot .slot-x{position:absolute;top:6px;right:8px;font-family:var(--font-display);font-weight:800;font-size:1rem;line-height:1;color:var(--cta);opacity:0;transition:opacity .2s}
+.slot.filled .slot-x{opacity:.55}
+.slot.filled:hover .slot-x{opacity:1}
+.bundle-hint{font-size:.85rem;font-weight:600;margin-top:.9rem}
+.bundle-hint.nudge{animation:nudge .4s ease}
+@keyframes nudge{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.btn.is-disabled{opacity:.45;pointer-events:none}
+.btn.is-loading{opacity:.7;pointer-events:none}
+/* build-a-stack product page */
+.bb-stage{display:flex;gap:14px;width:100%;padding:24px}
+.bb-stage .slot{flex:1;aspect-ratio:1/1.05}
+.bb-step{font-size:1.1rem}
 
 /* ---------- reviews ---------- */
 .reviews{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
@@ -326,4 +340,5 @@ button{font-family:inherit}
   *{scroll-behavior:auto}
   .reveal{transition:none;opacity:1;transform:none}
   .btn,.swatch,.pcard{transition:none}
+  .bundle-hint.nudge{animation:none}
 }

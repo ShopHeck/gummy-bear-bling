@@ -14,6 +14,58 @@
 
   {%- if page_description -%}<meta name="description" content="{{ page_description | escape }}">{%- endif -%}
 
+  {%- comment -%} Social sharing (Open Graph + Twitter) — drives CTR from social/SEO {%- endcomment -%}
+  <meta property="og:site_name" content="{{ shop.name }}">
+  <meta property="og:type" content="{% if request.page_type == 'product' %}product{% else %}website{% endif %}">
+  <meta property="og:title" content="{{ page_title | escape }}">
+  <meta property="og:url" content="{{ canonical_url }}">
+  {%- if page_description -%}<meta property="og:description" content="{{ page_description | escape }}">{%- endif -%}
+  {%- assign og_image = page_image | default: product.featured_media | default: settings.favicon -%}
+  {%- if og_image != blank -%}
+    <meta property="og:image" content="https:{{ og_image | image_url: width: 1200 }}">
+    <meta name="twitter:card" content="summary_large_image">
+  {%- else -%}
+    <meta name="twitter:card" content="summary">
+  {%- endif -%}
+  <meta name="theme-color" content="#DC1A57">
+
+  {%- comment -%} Structured data for rich results {%- endcomment -%}
+  {%- if request.page_type == 'product' -%}
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org/",
+      "@type": "Product",
+      "name": {{ product.title | json }},
+      "description": {{ product.description | strip_html | truncate: 300 | json }},
+      {% if product.featured_media %}"image": "https:{{ product.featured_media | image_url: width: 1200 }}",{% endif %}
+      "brand": { "@type": "Brand", "name": {{ shop.name | json }} },
+      "offers": {
+        "@type": "Offer",
+        "url": "{{ shop.url }}{{ product.url }}",
+        "priceCurrency": {{ cart.currency.iso_code | json }},
+        "price": "{{ product.price | divided_by: 100.0 }}",
+        "availability": "https://schema.org/{% if product.available %}InStock{% else %}OutOfStock{% endif %}"
+      }
+    }
+    </script>
+  {%- elsif request.page_type == 'index' -%}
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": {{ shop.name | json }},
+      "url": "{{ shop.url }}",
+      {%- capture social_list -%}
+        {%- if settings.social_instagram != blank %}{{ settings.social_instagram | json }}|{% endif -%}
+        {%- if settings.social_tiktok != blank %}{{ settings.social_tiktok | json }}|{% endif -%}
+        {%- if settings.social_pinterest != blank %}{{ settings.social_pinterest | json }}|{% endif -%}
+        {%- if settings.social_facebook != blank %}{{ settings.social_facebook | json }}{% endif -%}
+      {%- endcapture -%}
+      "sameAs": [{{ social_list | split: '|' | join: ',' }}]
+    }
+    </script>
+  {%- endif -%}
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
