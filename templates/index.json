@@ -172,13 +172,6 @@
             "color": "#3B65FF",
             "label": "Blueberry"
           }
-        },
-        "flavor_diyXKp": {
-          "type": "flavor",
-          "settings": {
-            "color": "#ff3b5c",
-            "label": "Cherry"
-          }
         }
       },
       "block_order": [
@@ -191,8 +184,7 @@
         "flavor_UDWVc7",
         "flavor_PC4TX8",
         "flavor_C8Gc4X",
-        "flavor_yLCyHA",
-        "flavor_diyXKp"
+        "flavor_yLCyHA"
       ],
       "settings": {
         "eyebrow": "Build a stack",
