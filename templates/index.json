@@ -98,7 +98,7 @@
         "heading": "Which one's yours?",
         "subheading": "Tap a flavor to meet the bear — then shop that exact necklace.",
         "cta_text": "Shop necklaces",
-        "product": "",
+        "product": "gummy-bear-necklace",
         "cta_link": "shopify://products/gummy-bear-necklace"
       }
     },
@@ -192,7 +192,7 @@
         "eyebrow": "Build a stack",
         "heading": "Three bears, better together",
         "text": "Layer your favorites and save — way more fun than one. Tap colors below to fill your stack.",
-        "variant_product": "",
+        "variant_product": "gummy-bear-necklace",
         "product": "build-your-3-bear-bundle",
         "price": "$45",
         "compare": "$60",
