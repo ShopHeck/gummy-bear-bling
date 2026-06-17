@@ -1,10 +1,60 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "current": {
-    "accent_color": "#DC1A57",
+    "accent_color": "#FE02F5",
     "heading_color": "#34202C",
     "social_tiktok": "https://tiktok.com/@gummybearbling",
     "social_instagram": "https://instagram.com/gummybearbling",
     "social_pinterest": "https://pinterest.com/gummybearbling",
-    "social_facebook": "https://facebook.com/gummybearbling"
+    "social_facebook": "https://facebook.com/gummybearbling",
+    "sections": {
+      "announcement-bar": {
+        "type": "announcement-bar",
+        "settings": {
+          "text": "Free shipping on US orders · Handmade to order in Tampa, FL 🐻"
+        }
+      },
+      "header": {
+        "type": "header",
+        "settings": {
+          "menu": "main-menu"
+        }
+      },
+      "footer": {
+        "type": "footer",
+        "blocks": {
+          "footer-0": {
+            "type": "menu",
+            "settings": {
+              "heading": "Shop",
+              "menu": "main-menu"
+            }
+          },
+          "footer-1": {
+            "type": "menu",
+            "settings": {
+              "heading": "Help",
+              "menu": "footer"
+            }
+          }
+        },
+        "block_order": [
+          "footer-0",
+          "footer-1"
+        ],
+        "settings": {
+          "blurb": "Hand-poured resin gummy bear jewelry, made with love in Tampa, Florida."
+        }
+      }
+    },
+    "content_for_index": []
   }
 }

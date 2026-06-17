@@ -1,1 +1,159 @@
-{"sections":{"hero":{"type":"hero","settings":{}},"trust":{"type":"trust-strip","settings":{}},"featured":{"type":"featured-bears","settings":{}},"color_story":{"type":"color-story","settings":{}},"bundle":{"type":"bundle","settings":{}},"reviews":{"type":"reviews","settings":{}},"newsletter":{"type":"newsletter","settings":{}}},"order":["hero","trust","featured","color_story","bundle","reviews","newsletter"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "hero": {
+      "type": "hero",
+      "settings": {
+        "eyebrow": "Handmade resin jewelry · since 2021",
+        "heading": "Step into the gummy world",
+        "subheading": "A little bear-shaped hit of nostalgia, hand-poured in resin and hung on tarnish-proof gold. Pick your flavor — get compliments everywhere you go.",
+        "cta_text": "Shop the bears",
+        "cta_link": "",
+        "cta2_text": "Build a stack & save",
+        "cta2_link": "",
+        "rating_text": "4.1 from real customers"
+      }
+    },
+    "trust": {
+      "type": "trust-strip",
+      "blocks": {
+        "item_XLhyKt": {
+          "type": "item",
+          "settings": {
+            "icon": "💛",
+            "title": "Loved & guaranteed",
+            "text": "30 days, no-fuss returns"
+          }
+        },
+        "item_dgdwRV": {
+          "type": "item",
+          "settings": {
+            "icon": "🇺🇸",
+            "title": "Handmade In the USA",
+            "text": "Poured to Perfection"
+          }
+        },
+        "item_EzeA86": {
+          "type": "item",
+          "settings": {
+            "icon": "🐻",
+            "title": "Natural Dried Epoxy Resin",
+            "text": "Multicolored Epoxy Resin Charms"
+          }
+        },
+        "item_EE7XKB": {
+          "type": "item",
+          "settings": {
+            "icon": "💕",
+            "title": "Same Day USA Shipping",
+            "text": "Order by 12PM Shipped Same Day"
+          }
+        }
+      },
+      "block_order": [
+        "item_XLhyKt",
+        "item_dgdwRV",
+        "item_EzeA86",
+        "item_EE7XKB"
+      ],
+      "settings": {}
+    },
+    "featured": {
+      "type": "featured-bears",
+      "settings": {
+        "eyebrow": "Best-selling bears",
+        "heading": "Pick your flavor",
+        "subheading": "Ten colors, four chains. Mix, match, and stack them up.",
+        "collection": "gummy-bear-necklace",
+        "count": 4
+      }
+    },
+    "color_story": {
+      "type": "color-story",
+      "settings": {
+        "eyebrow": "Tap a flavor",
+        "heading": "Which one's yours?",
+        "cta_text": "Shop necklaces",
+        "cta_link": "shopify://products/gummy-bear-necklace"
+      }
+    },
+    "bundle": {
+      "type": "bundle",
+      "settings": {
+        "eyebrow": "Build a stack",
+        "heading": "Three bears, better together",
+        "text": "Layer your favorites and save — way more fun than one. Tap colors below to fill your stack.",
+        "price": "$45",
+        "compare": "$60",
+        "save_text": "Save $15",
+        "cta_text": "Add stack to cart",
+        "cta_link": ""
+      }
+    },
+    "reviews": {
+      "type": "reviews",
+      "blocks": {
+        "review_9H7yzL": {
+          "type": "review",
+          "settings": {
+            "quote": "I LOVEE THESE! They are hard to keep with my kids stealing it everytime I take it off! Reminds me of my childhood.",
+            "name": "Marcy, L.",
+            "location": "Orlando, FL"
+          }
+        },
+        "review_Rt6Jar": {
+          "type": "review",
+          "settings": {
+            "quote": "I get compliments every single time I wear it!",
+            "name": "Janet H.",
+            "location": "Tampa, FL"
+          }
+        },
+        "review_tt9BA6": {
+          "type": "review",
+          "settings": {
+            "quote": "My FAVORITE Necklace to Wear.",
+            "name": "Nikki S.",
+            "location": "St. Pete, FL"
+          }
+        }
+      },
+      "block_order": [
+        "review_9H7yzL",
+        "review_Rt6Jar",
+        "review_tt9BA6"
+      ],
+      "settings": {
+        "eyebrow": "The gummy bear gang",
+        "heading": "People can't stop wearing them",
+        "rating_text": "4.1 average · real customer photos"
+      }
+    },
+    "newsletter": {
+      "type": "newsletter",
+      "settings": {
+        "incentive": "🍬 10% off your first bear",
+        "heading": "Join the gummy bear gang",
+        "text": "First dibs on new flavors, drops, and the occasional treat.",
+        "button": "Get my 10% off"
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "trust",
+    "featured",
+    "color_story",
+    "bundle",
+    "reviews",
+    "newsletter"
+  ]
+}
