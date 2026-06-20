@@ -12,13 +12,13 @@
     "hero": {
       "type": "hero",
       "settings": {
-        "eyebrow": "Handmade resin jewelry · since 2021",
-        "heading": "Step into the gummy world",
-        "subheading": "A little bear-shaped hit of nostalgia, hand-poured in resin and hung on tarnish-proof gold. Pick your flavor — get compliments everywhere you go.",
-        "cta_text": "Shop the bears",
-        "cta_link": "shopify://collections/best-sellers",
-        "cta2_text": "Build a stack & save",
-        "cta2_link": "shopify://products/gummy-bear-necklace",
+        "eyebrow": "🎆 Limited 4th of July drop",
+        "heading": "Your sweetest 4th of July",
+        "subheading": "Meet the Red, White & Blue Triple Bear Necklace — three resin bears on one gold chain. Plus 20% off everything with code USA20 through July 4.",
+        "cta_text": "Shop 4th of July",
+        "cta_link": "shopify://collections/4th-of-july",
+        "cta2_text": "Shop the Triple Bear",
+        "cta2_link": "shopify://products/red-white-blue-triple-bear-necklace",
         "rating_text": "4.9 from real customers"
       }
     },
