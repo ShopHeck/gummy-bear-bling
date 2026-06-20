@@ -104,6 +104,9 @@
               {%- if product.available -%}Add to cart{%- else -%}Sold out{%- endif -%}
             </button>
           </div>
+          {%- if product.available -%}
+            <div class="pdp-dynamic-checkout" style="margin-top:.7rem">{{ form | payment_button }}</div>
+          {%- endif -%}
         {%- endform -%}
 
         <div class="reassure">
