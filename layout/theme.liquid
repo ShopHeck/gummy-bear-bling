@@ -132,6 +132,10 @@
     {% render 'cart-drawer' %}
   {%- endif -%}
 
+  {%- if settings.enable_email_popup -%}
+    {% render 'email-popup' %}
+  {%- endif -%}
+
   <script>
     window.theme = {
       moneyFormat: {{ shop.money_format | json }},
