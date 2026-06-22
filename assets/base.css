@@ -111,14 +111,14 @@ button{font-family:inherit}
 .site-header{position:sticky;top:0;z-index:60}
 .navbar{
   margin:12px auto 0;max-width:var(--maxw);
-  display:flex;align-items:center;justify-content:space-between;gap:1rem;
+  display:flex;align-items:center;gap:1rem;
   padding:.5rem .7rem .5rem 1.1rem;border-radius:999px;
   background:rgba(255,255,255,.66);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
   border:1px solid rgba(255,255,255,.85);box-shadow:0 10px 30px -20px rgba(90,30,60,.5);
 }
-.logo{font-family:var(--font-display);font-weight:800;font-size:1.26rem;display:flex;align-items:center;gap:.5rem;white-space:nowrap}
+.logo{font-family:var(--font-display);font-weight:800;font-size:1.26rem;display:flex;align-items:center;gap:.5rem;white-space:nowrap;flex:none}
 .logo .dot{width:26px;height:26px;flex:none}
-.navlinks{display:flex;align-items:center;gap:.85rem;font-weight:600;font-size:.84rem;flex-wrap:nowrap;min-width:0}
+.navlinks{display:flex;align-items:center;justify-content:center;gap:.9rem;font-weight:600;font-size:.85rem;flex-wrap:nowrap;flex:1 1 auto;min-width:0}
 .navlinks a{position:relative;padding:.2rem 0;color:var(--ink-soft);white-space:nowrap}
 .navlinks a:hover{color:var(--ink)}
 .navlinks a::after{content:"";position:absolute;left:0;bottom:-3px;height:2.5px;width:0;border-radius:2px;background:var(--cta);transition:width .22s}
