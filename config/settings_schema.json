@@ -46,5 +46,16 @@
       { "type": "url", "id": "social_pinterest", "label": "Pinterest URL" },
       { "type": "url", "id": "social_facebook", "label": "Facebook URL" }
     ]
+  },
+  {
+    "name": "Email popup",
+    "settings": [
+      { "type": "checkbox", "id": "enable_email_popup", "label": "Enable email signup popup", "default": true },
+      { "type": "text", "id": "popup_incentive", "label": "Incentive badge", "default": "🍬 10% off your first bear" },
+      { "type": "text", "id": "popup_heading", "label": "Heading", "default": "Join the gummy bear gang" },
+      { "type": "textarea", "id": "popup_text", "label": "Text", "default": "First dibs on new flavors, drops, and 10% off your first order." },
+      { "type": "text", "id": "popup_button", "label": "Button", "default": "Send my 10% off" },
+      { "type": "number", "id": "popup_delay", "label": "Show after (seconds)", "default": 6 }
+    ]
   }
 ]

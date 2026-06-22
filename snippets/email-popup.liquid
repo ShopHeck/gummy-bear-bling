@@ -1,0 +1,70 @@
+{%- comment -%}
+  Email-capture popup. Reuses the Shopify customer form so signups land in
+  Customers (tagged "newsletter,popup") with marketing consent. Shown once,
+  frequency-capped client-side. Suppressed on cart and for logged-in customers.
+{%- endcomment -%}
+{%- unless request.page_type == 'cart' or customer -%}
+<div class="ep-overlay" data-ep-overlay hidden>
+  <div class="ep-modal gummy" role="dialog" aria-modal="true" aria-labelledby="ep-heading" aria-describedby="ep-text" data-ep-modal tabindex="-1">
+    <button type="button" class="ep-close" data-ep-close aria-label="Close">&times;</button>
+    <span class="ep-badge">{{ settings.popup_incentive | default: '🍬 10% off your first bear' }}</span>
+    <h2 id="ep-heading" class="ep-heading">{{ settings.popup_heading | default: 'Join the gummy bear gang' }}</h2>
+    <p id="ep-text" class="ep-text">{{ settings.popup_text | default: 'First dibs on new flavors, drops, and 10% off your first order.' }}</p>
+    {%- form 'customer', class: 'ep-form' -%}
+      <input type="hidden" name="contact[tags]" value="newsletter,popup">
+      <input type="email" name="contact[email]" placeholder="you@email.com" aria-label="Email address" required>
+      <button type="submit" class="btn">{{ settings.popup_button | default: 'Send my 10% off' }}</button>
+    {%- endform -%}
+    <p class="ep-note">No spam, just sweetness. Unsubscribe anytime.</p>
+  </div>
+</div>
+<style>
+  .ep-overlay{position:fixed;inset:0;z-index:120;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(40,20,35,.55);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+  .ep-overlay.open{display:flex}
+  .ep-modal{position:relative;width:min(440px,94vw);background:#fff;border-radius:24px;padding:34px 28px 26px;text-align:center;box-shadow:0 30px 80px -30px rgba(90,30,60,.6);animation:epin .25s ease}
+  @keyframes epin{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:none}}
+  .ep-close{position:absolute;top:8px;right:14px;background:none;border:none;font-size:1.7rem;line-height:1;cursor:pointer;color:var(--ink-soft,#7C6070)}
+  .ep-badge{display:inline-block;background:rgba(220,26,87,.10);color:var(--cta,#DC1A57);font-weight:700;font-size:.8rem;padding:.35rem .8rem;border-radius:999px;margin-bottom:.7rem}
+  .ep-heading{font-family:var(--font-display,sans-serif);font-size:1.7rem;line-height:1.1;margin:0 0 .4rem}
+  .ep-text{color:var(--ink-soft,#7C6070);margin:0 0 1.1rem}
+  .ep-form{display:flex;gap:.5rem;flex-wrap:wrap}
+  .ep-form input{flex:1;min-width:0;padding:.8rem 1rem;border:1.5px solid rgba(0,0,0,.12);border-radius:999px;font-size:1rem}
+  .ep-form .btn{flex:none;white-space:nowrap}
+  .ep-note{font-size:.76rem;color:var(--ink-faint,#A892A0);margin:.75rem 0 0}
+  @media(max-width:420px){ .ep-form .btn{flex:1 1 100%} }
+</style>
+<script>
+  (function(){
+    var KEY='gbb_ep_v1';
+    var overlay=document.querySelector('[data-ep-overlay]');
+    if(!overlay) return;
+    var store;
+    try{ store=window.localStorage; }catch(e){ return; }
+    /* successful Shopify customer post redirects back with ?customer_posted=true */
+    if(/[?&]customer_posted=true/.test(location.search)){ try{ store.setItem(KEY,'sub'); }catch(e){} return; }
+    var seen=store.getItem(KEY);
+    if(seen==='sub') return;
+    if(seen){ if((Date.now()-parseInt(seen,10))/86400000 < 14) return; }
+    var shown=false, lastFocus, delay={{ settings.popup_delay | default: 6 | times: 1000 }};
+    function open(){
+      if(shown) return; shown=true; clearTimeout(timer);
+      overlay.hidden=false;
+      requestAnimationFrame(function(){ overlay.classList.add('open'); });
+      lastFocus=document.activeElement;
+      var inp=overlay.querySelector('input[type=email]'); if(inp) inp.focus();
+    }
+    function dismiss(){
+      overlay.classList.remove('open');
+      setTimeout(function(){ overlay.hidden=true; },220);
+      try{ store.setItem(KEY, String(Date.now())); }catch(e){}
+      if(lastFocus && lastFocus.focus) lastFocus.focus();
+    }
+    overlay.querySelector('[data-ep-close]').addEventListener('click', dismiss);
+    overlay.addEventListener('click', function(e){ if(e.target===overlay) dismiss(); });
+    document.addEventListener('keydown', function(e){ if(e.key==='Escape' && overlay.classList.contains('open')) dismiss(); });
+    var timer=setTimeout(open, delay);
+    /* exit-intent on desktop */
+    document.addEventListener('mouseout', function(e){ if(e.clientY<=0 && !e.relatedTarget && !shown){ open(); } });
+  })();
+</script>
+{%- endunless -%}
