@@ -1,0 +1,122 @@
+{%- liquid
+  assign s = section.settings
+-%}
+<div class="sl" id="sl-{{ section.id }}" data-autoplay="{{ s.autoplay }}" data-speed="{{ s.speed | default: 6 }}">
+  <div class="sl__track" data-sl-track>
+    {%- for block in section.blocks -%}
+      {%- assign b = block.settings -%}
+      <div class="sl__slide sl--{{ s.height }}" {{ block.shopify_attributes }}>
+        {%- if b.image != blank -%}
+          <img class="sl__img"
+               src="{{ b.image | image_url: width: 2000 }}"
+               srcset="{{ b.image | image_url: width: 800 }} 800w, {{ b.image | image_url: width: 1400 }} 1400w, {{ b.image | image_url: width: 2000 }} 2000w"
+               sizes="100vw" alt="{{ b.image.alt | escape | default: b.heading | escape }}"
+               loading="{% if forloop.first %}eager{% else %}lazy{% endif %}" width="2000" height="1000">
+        {%- else -%}
+          <div class="sl__img sl__placeholder" style="background:{{ b.placeholder_color | default: '#A55CFF' }}"></div>
+        {%- endif -%}
+        <span class="sl__scrim" style="opacity:{{ b.overlay_opacity | default: 30 | divided_by: 100.0 }}"></span>
+        <div class="sl__inner wrap sl--text-{{ b.text_align }}">
+          <div class="sl__content sl--{{ b.scheme }}">
+            {%- if b.heading != blank -%}<h2 class="sl__heading">{{ b.heading }}</h2>{%- endif -%}
+            {%- if b.text != blank -%}<p class="sl__text">{{ b.text }}</p>{%- endif -%}
+            {%- if b.button_label != blank or b.button2_label != blank -%}
+              <div class="sl__btns">
+                {%- if b.button_label != blank -%}<a class="btn lg" href="{{ b.button_link | default: '#' }}">{{ b.button_label }}</a>{%- endif -%}
+                {%- if b.button2_label != blank -%}<a class="btn ghost lg" href="{{ b.button2_link | default: '#' }}">{{ b.button2_label }}</a>{%- endif -%}
+              </div>
+            {%- endif -%}
+          </div>
+        </div>
+      </div>
+    {%- endfor -%}
+  </div>
+  {%- if section.blocks.size > 1 -%}
+    <button class="sl__arrow sl__arrow--prev" data-sl-prev aria-label="Previous slide" type="button">&lsaquo;</button>
+    <button class="sl__arrow sl__arrow--next" data-sl-next aria-label="Next slide" type="button">&rsaquo;</button>
+    <div class="sl__dots">
+      {%- for block in section.blocks -%}
+        <button class="sl__dot{% if forloop.first %} active{% endif %}" data-sl-dot="{{ forloop.index0 }}" aria-label="Go to slide {{ forloop.index }}" type="button"></button>
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+</div>
+<style>
+  .sl{position:relative;overflow:hidden}
+  .sl__track{display:flex;transition:transform .5s cubic-bezier(.4,0,.2,1)}
+  .sl__slide{position:relative;flex:0 0 100%;display:flex;overflow:hidden}
+  .sl--small{min-height:340px}.sl--medium{min-height:480px}.sl--large{min-height:640px}
+  .sl__img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .sl__scrim{position:absolute;inset:0;background:#1a0f17}
+  .sl__inner{position:relative;z-index:2;display:flex;align-items:center;width:100%;padding:48px 0}
+  .sl--text-left{justify-content:flex-start;text-align:left}
+  .sl--text-center{justify-content:center;text-align:center}
+  .sl--text-right{justify-content:flex-end;text-align:right}
+  .sl__content{max-width:600px}
+  .sl--light{color:#fff}.sl--dark{color:var(--ink,#34202C)}
+  .sl__heading{font-family:var(--font-display,sans-serif);font-size:clamp(2rem,5vw,3.2rem);line-height:1.02;margin:0 0 .5rem}
+  .sl__text{font-size:1.06rem;margin:0 0 1.1rem}
+  .sl__btns{display:flex;gap:.6rem;flex-wrap:wrap}
+  .sl--text-center .sl__btns{justify-content:center}.sl--text-right .sl__btns{justify-content:flex-end}
+  .sl__arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:3;width:42px;height:42px;border-radius:50%;border:none;background:rgba(255,255,255,.85);color:#34202C;font-size:1.6rem;line-height:1;cursor:pointer;display:grid;place-items:center}
+  .sl__arrow--prev{left:14px}.sl__arrow--next{right:14px}
+  .sl__dots{position:absolute;left:0;right:0;bottom:14px;z-index:3;display:flex;gap:.4rem;justify-content:center}
+  .sl__dot{width:9px;height:9px;border-radius:50%;border:none;background:rgba(255,255,255,.55);cursor:pointer;padding:0}
+  .sl__dot.active{background:#fff;width:22px;border-radius:5px}
+</style>
+<script>
+  (function(){
+    var root=document.getElementById('sl-{{ section.id }}');
+    if(!root) return;
+    var track=root.querySelector('[data-sl-track]');
+    var slides=root.querySelectorAll('.sl__slide');
+    var dots=root.querySelectorAll('[data-sl-dot]');
+    var n=slides.length, i=0, timer=null;
+    if(n<2) return;
+    function go(k){ i=(k+n)%n; track.style.transform='translateX('+(-i*100)+'%)'; for(var d=0;d<dots.length;d++){ dots[d].classList.toggle('active', d===i); } }
+    function start(){ if(root.getAttribute('data-autoplay')==='true'){ var sp=(parseFloat(root.getAttribute('data-speed'))||6)*1000; timer=setInterval(function(){ go(i+1); }, sp); } }
+    function stop(){ if(timer){ clearInterval(timer); timer=null; } }
+    function reset(){ stop(); start(); }
+    var prev=root.querySelector('[data-sl-prev]'), next=root.querySelector('[data-sl-next]');
+    if(prev) prev.addEventListener('click', function(){ go(i-1); reset(); });
+    if(next) next.addEventListener('click', function(){ go(i+1); reset(); });
+    for(var d=0;d<dots.length;d++){ (function(el){ el.addEventListener('click', function(){ go(parseInt(el.getAttribute('data-sl-dot'),10)); reset(); }); })(dots[d]); }
+    root.addEventListener('mouseenter', stop);
+    root.addEventListener('mouseleave', start);
+    var x0=null;
+    track.addEventListener('touchstart', function(e){ x0=e.touches[0].clientX; }, {passive:true});
+    track.addEventListener('touchend', function(e){ if(x0===null) return; var dx=e.changedTouches[0].clientX-x0; if(Math.abs(dx)>40){ go(dx<0?i+1:i-1); reset(); } x0=null; });
+    start();
+  })();
+</script>
+{% schema %}
+{
+  "name": "Slideshow",
+  "tag": "section",
+  "settings": [
+    { "type": "checkbox", "id": "autoplay", "label": "Auto-rotate slides", "default": true },
+    { "type": "range", "id": "speed", "label": "Seconds per slide", "min": 3, "max": 10, "step": 1, "unit": "s", "default": 6 },
+    { "type": "select", "id": "height", "label": "Height", "default": "medium", "options": [
+      { "value": "small", "label": "Small" }, { "value": "medium", "label": "Medium" }, { "value": "large", "label": "Large" } ] }
+  ],
+  "blocks": [
+    { "type": "slide", "name": "Slide", "settings": [
+      { "type": "image_picker", "id": "image", "label": "Image" },
+      { "type": "color", "id": "placeholder_color", "label": "Placeholder color", "default": "#A55CFF" },
+      { "type": "range", "id": "overlay_opacity", "label": "Image overlay", "min": 0, "max": 80, "step": 5, "unit": "%", "default": 30 },
+      { "type": "select", "id": "scheme", "label": "Text color", "default": "light", "options": [
+        { "value": "light", "label": "Light" }, { "value": "dark", "label": "Dark" } ] },
+      { "type": "select", "id": "text_align", "label": "Text position", "default": "center", "options": [
+        { "value": "left", "label": "Left" }, { "value": "center", "label": "Center" }, { "value": "right", "label": "Right" } ] },
+      { "type": "text", "id": "heading", "label": "Heading", "default": "Your headline here" },
+      { "type": "text", "id": "text", "label": "Text", "default": "A short supporting line." },
+      { "type": "text", "id": "button_label", "label": "Button 1 label", "default": "Shop now" },
+      { "type": "url", "id": "button_link", "label": "Button 1 link" },
+      { "type": "text", "id": "button2_label", "label": "Button 2 label" },
+      { "type": "url", "id": "button2_link", "label": "Button 2 link" }
+    ] }
+  ],
+  "max_blocks": 6,
+  "presets": [{ "name": "Slideshow", "blocks": [ { "type": "slide" }, { "type": "slide" } ] }]
+}
+{% endschema %}

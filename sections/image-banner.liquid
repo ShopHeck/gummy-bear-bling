@@ -1,0 +1,71 @@
+{%- liquid
+  assign s = section.settings
+-%}
+<div class="ib ib--{{ s.height }}" id="ib-{{ section.id }}">
+  {%- if s.image != blank -%}
+    <img class="ib__img"
+         src="{{ s.image | image_url: width: 2000 }}"
+         srcset="{{ s.image | image_url: width: 800 }} 800w, {{ s.image | image_url: width: 1400 }} 1400w, {{ s.image | image_url: width: 2000 }} 2000w"
+         sizes="100vw" alt="{{ s.image.alt | escape | default: s.heading | escape }}"
+         loading="lazy" width="2000" height="1000">
+  {%- else -%}
+    <div class="ib__img ib__placeholder"></div>
+  {%- endif -%}
+  <span class="ib__scrim" style="opacity:{{ s.overlay_opacity | default: 30 | divided_by: 100.0 }}"></span>
+  <div class="ib__inner wrap ib--text-{{ s.text_align }}">
+    <div class="ib__content ib--{{ s.scheme }}">
+      {%- if s.eyebrow != blank -%}<span class="ib__eyebrow">{{ s.eyebrow }}</span>{%- endif -%}
+      {%- if s.heading != blank -%}<h2 class="ib__heading">{{ s.heading }}</h2>{%- endif -%}
+      {%- if s.text != blank -%}<div class="ib__text">{{ s.text }}</div>{%- endif -%}
+      {%- if s.button_label != blank or s.button2_label != blank -%}
+        <div class="ib__btns">
+          {%- if s.button_label != blank -%}<a class="btn lg" href="{{ s.button_link | default: '#' }}">{{ s.button_label }}</a>{%- endif -%}
+          {%- if s.button2_label != blank -%}<a class="btn ghost lg" href="{{ s.button2_link | default: '#' }}">{{ s.button2_label }}</a>{%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+<style>
+  .ib{position:relative;display:flex;overflow:hidden}
+  .ib--small{min-height:320px}.ib--medium{min-height:460px}.ib--large{min-height:620px}
+  .ib__img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .ib__placeholder{background:linear-gradient(120deg,#FF6FB0,#A55CFF,#34D6D6)}
+  .ib__scrim{position:absolute;inset:0;background:#1a0f17}
+  .ib__inner{position:relative;z-index:2;display:flex;align-items:center;width:100%;padding-top:48px;padding-bottom:48px}
+  .ib--text-left{justify-content:flex-start;text-align:left}
+  .ib--text-center{justify-content:center;text-align:center}
+  .ib--text-right{justify-content:flex-end;text-align:right}
+  .ib__content{max-width:600px}
+  .ib--light{color:#fff}.ib--dark{color:var(--ink,#34202C)}
+  .ib__eyebrow{display:inline-block;font-weight:700;text-transform:uppercase;letter-spacing:.08em;font-size:.78rem;opacity:.92;margin-bottom:.5rem}
+  .ib__heading{font-family:var(--font-display,sans-serif);font-size:clamp(2rem,5vw,3.2rem);line-height:1.02;margin:0 0 .6rem}
+  .ib__text{font-size:1.06rem;opacity:.96;margin-bottom:1.1rem}
+  .ib__btns{display:flex;gap:.6rem;flex-wrap:wrap}
+  .ib--text-center .ib__btns{justify-content:center}
+  .ib--text-right .ib__btns{justify-content:flex-end}
+</style>
+{% schema %}
+{
+  "name": "Image banner",
+  "tag": "section",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Background image" },
+    { "type": "select", "id": "height", "label": "Height", "default": "medium", "options": [
+      { "value": "small", "label": "Small" }, { "value": "medium", "label": "Medium" }, { "value": "large", "label": "Large" } ] },
+    { "type": "range", "id": "overlay_opacity", "label": "Image overlay", "min": 0, "max": 80, "step": 5, "unit": "%", "default": 30 },
+    { "type": "select", "id": "scheme", "label": "Text color", "default": "light", "options": [
+      { "value": "light", "label": "Light" }, { "value": "dark", "label": "Dark" } ] },
+    { "type": "select", "id": "text_align", "label": "Text position", "default": "center", "options": [
+      { "value": "left", "label": "Left" }, { "value": "center", "label": "Center" }, { "value": "right", "label": "Right" } ] },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "New drop" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "A sweet new way to sparkle" },
+    { "type": "richtext", "id": "text", "label": "Text", "default": "<p>Feature a collection, a sale, or your brand story.</p>" },
+    { "type": "text", "id": "button_label", "label": "Button 1 label", "default": "Shop now" },
+    { "type": "url", "id": "button_link", "label": "Button 1 link" },
+    { "type": "text", "id": "button2_label", "label": "Button 2 label" },
+    { "type": "url", "id": "button2_link", "label": "Button 2 link" }
+  ],
+  "presets": [{ "name": "Image banner" }]
+}
+{% endschema %}
