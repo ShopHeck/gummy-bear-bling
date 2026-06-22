@@ -47,6 +47,13 @@
           {%- endif -%}
         </div>
 
+        {%- assign cv = product.selected_or_first_available_variant -%}
+        {%- if section.settings.pdp_show_scarcity -%}
+          {%- assign show_stock = false -%}
+          {%- if cv.inventory_management != blank and cv.inventory_quantity > 0 and cv.inventory_quantity <= section.settings.pdp_scarcity_threshold -%}{%- assign show_stock = true -%}{%- endif -%}
+          <p class="pdp-stock" data-stock{% unless show_stock %} hidden{% endunless %}>🔥 Only <strong data-stock-n>{{ cv.inventory_quantity }}</strong> left — selling fast!</p>
+        {%- endif -%}
+
         {%- form 'product', product, id: 'pdp-add', class: 'pdp-form' -%}
           {%- unless product.has_only_default_variant -%}
             {%- for option in product.options_with_values -%}
@@ -94,6 +101,10 @@
             {%- endfor -%}
           </select>
 
+          {%- if section.settings.pdp_show_countdown -%}
+            <p class="pdp-ship-timer" data-ship-timer data-cutoff="{{ section.settings.pdp_cutoff_hour | default: 12 }}" hidden></p>
+          {%- endif -%}
+
           <div class="pdp-actions">
             <div class="qty" data-qty>
               <button type="button" data-qty-down aria-label="Decrease quantity">−</button>
@@ -109,11 +120,37 @@
           {%- endif -%}
         {%- endform -%}
 
-        <div class="reassure">
-          <div><span class="ic">🚚</span> Free US shipping · ships in 1–2 business days</div>
-          <div><span class="ic">↩︎</span> 30-day happiness guarantee — love it or send it back</div>
-          <div><span class="ic">🔒</span> Secure checkout · Shop Pay, Apple Pay &amp; cards</div>
+        {%- if section.settings.pdp_show_payments -%}
+          <div class="pdp-pay">
+            <span class="pdp-pay-lbl">🔒 Guaranteed safe &amp; secure checkout</span>
+            <div class="pdp-pay-chips">
+              <span>Shop&nbsp;Pay</span><span>Apple&nbsp;Pay</span><span>Google&nbsp;Pay</span><span>Visa</span><span>Mastercard</span><span>Amex</span><span>PayPal</span>
+            </div>
+          </div>
+        {%- endif -%}
+
+        {%- if section.settings.pdp_benefit_1 != blank or section.settings.pdp_benefit_2 != blank or section.settings.pdp_benefit_3 != blank or section.settings.pdp_benefit_4 != blank -%}
+          <ul class="pdp-benefits">
+            {%- if section.settings.pdp_benefit_1 != blank -%}<li>{{ section.settings.pdp_benefit_1 }}</li>{%- endif -%}
+            {%- if section.settings.pdp_benefit_2 != blank -%}<li>{{ section.settings.pdp_benefit_2 }}</li>{%- endif -%}
+            {%- if section.settings.pdp_benefit_3 != blank -%}<li>{{ section.settings.pdp_benefit_3 }}</li>{%- endif -%}
+            {%- if section.settings.pdp_benefit_4 != blank -%}<li>{{ section.settings.pdp_benefit_4 }}</li>{%- endif -%}
+          </ul>
+        {%- endif -%}
+
+        <div class="pdp-trust">
+          <div><span class="ic">🇺🇸</span><div><b>Handmade in the USA</b><small>Hand-poured in Tampa, FL</small></div></div>
+          <div><span class="ic">🚚</span><div><b>Free US shipping</b><small>Fast same-day dispatch</small></div></div>
+          <div><span class="ic">↩︎</span><div><b>30-day returns</b><small>Love it or send it back</small></div></div>
+          <div><span class="ic">🔒</span><div><b>Secure checkout</b><small>Shop Pay, Apple Pay &amp; cards</small></div></div>
         </div>
+
+        {%- if section.settings.pdp_guarantee_title != blank -%}
+          <div class="pdp-guarantee">
+            <span class="pdp-guarantee-ic">💛</span>
+            <div><b>{{ section.settings.pdp_guarantee_title }}</b>{%- if section.settings.pdp_guarantee_text != blank -%}<p>{{ section.settings.pdp_guarantee_text }}</p>{%- endif -%}</div>
+          </div>
+        {%- endif -%}
 
         {%- if product.description != blank -%}
           <div class="pdp-desc rte">{{ product.description }}</div>
@@ -123,6 +160,28 @@
   </div>
 </div>
 
+<style>
+  .pdp-stock{display:inline-flex;align-items:center;gap:.4rem;background:rgba(220,26,87,.08);color:var(--cta,#DC1A57);font-weight:700;font-size:.9rem;padding:.4rem .75rem;border-radius:999px;margin:.1rem 0 .7rem}
+  .pdp-ship-timer{font-size:.92rem;color:var(--ink,#34202C);background:#FFF7E8;border:1px solid #F6DFA0;border-radius:12px;padding:.55rem .8rem;margin:.2rem 0 .9rem}
+  .pdp-ship-timer strong{color:#B5134A}
+  .pdp-pay{margin:.85rem 0 0;text-align:center}
+  .pdp-pay-lbl{display:block;font-size:.82rem;color:var(--ink-soft,#7C6070);margin-bottom:.4rem}
+  .pdp-pay-chips{display:flex;flex-wrap:wrap;gap:.35rem;justify-content:center}
+  .pdp-pay-chips span{font-size:.7rem;font-weight:700;letter-spacing:.02em;color:var(--ink-soft,#7C6070);background:#fff;border:1px solid var(--line,rgba(0,0,0,.1));border-radius:6px;padding:.25rem .5rem}
+  .pdp-benefits{list-style:none;padding:0;margin:1.2rem 0;display:grid;gap:.5rem}
+  .pdp-benefits li{position:relative;padding-left:1.7rem;color:var(--ink,#34202C);font-size:.96rem;line-height:1.35}
+  .pdp-benefits li::before{content:"✓";position:absolute;left:0;top:.05rem;color:#fff;background:var(--cta,#DC1A57);width:1.15rem;height:1.15rem;border-radius:50%;font-size:.72rem;display:grid;place-items:center;font-weight:800}
+  .pdp-trust{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin:1.2rem 0;padding:1rem;background:rgba(255,255,255,.6);border:1px solid var(--line,rgba(0,0,0,.06));border-radius:16px}
+  .pdp-trust > div{display:flex;gap:.55rem;align-items:flex-start}
+  .pdp-trust .ic{font-size:1.2rem;line-height:1.1;flex:none}
+  .pdp-trust b{display:block;font-size:.9rem}
+  .pdp-trust small{color:var(--ink-soft,#7C6070);font-size:.78rem}
+  .pdp-guarantee{display:flex;gap:.7rem;align-items:center;margin:1.2rem 0;padding:1rem 1.1rem;background:linear-gradient(120deg,rgba(255,206,46,.16),rgba(255,111,176,.13));border-radius:16px}
+  .pdp-guarantee-ic{font-size:1.9rem;flex:none}
+  .pdp-guarantee b{font-family:var(--font-display,sans-serif);font-size:1.02rem}
+  .pdp-guarantee p{margin:.12rem 0 0;font-size:.88rem;color:var(--ink-soft,#7C6070)}
+  @media(max-width:520px){ .pdp-trust{grid-template-columns:1fr} }
+</style>
 <script>
   (function(){
     var form = document.getElementById('pdp-add');
@@ -130,13 +189,32 @@
     var hidden = form.querySelector('.product-variant-id');
     var inputs = form.querySelectorAll('.product-option');
     var variants = {{ product.variants | json }};
+    var threshold = {{ section.settings.pdp_scarcity_threshold | default: 10 }};
+    var showScarcity = {{ section.settings.pdp_show_scarcity | default: true | json }};
+    var stockEl = document.querySelector('[data-stock]');
+    var stockN = stockEl ? stockEl.querySelector('[data-stock-n]') : null;
+    var addBtn = form.querySelector('[data-add-btn]');
+
+    function applyVariant(v){
+      if(!v) return;
+      hidden.value = v.id;
+      if(addBtn){
+        if(v.available){ addBtn.disabled = false; if(addBtn.textContent.trim() !== 'Add to cart') addBtn.textContent = 'Add to cart'; }
+        else { addBtn.disabled = true; addBtn.textContent = 'Sold out'; }
+      }
+      if(stockEl){
+        var low = showScarcity && v.inventory_management && v.inventory_quantity > 0 && v.inventory_quantity <= threshold;
+        if(low){ if(stockN) stockN.textContent = v.inventory_quantity; stockEl.hidden = false; }
+        else { stockEl.hidden = true; }
+      }
+    }
     function update(){
       var chosen = [];
       inputs.forEach(function(s){ chosen.push(s.value); });
       for(var i=0;i<variants.length;i++){
         var v = variants[i], match = true;
-        for(var j=0;j<chosen.length;j++){ if(v.options[j] !== chosen[j]) match=false; }
-        if(match){ hidden.value = v.id; break; }
+        for(var j=0;j<chosen.length;j++){ if(v.options[j] !== chosen[j]) match = false; }
+        if(match){ applyVariant(v); return; }
       }
     }
     inputs.forEach(function(s){ if(s.tagName === 'SELECT') s.addEventListener('change', update); });
@@ -156,8 +234,45 @@
         update();
       });
     });
+    update();
+
+    var timerEl = document.querySelector('[data-ship-timer]');
+    if(timerEl){
+      var cutoff = parseInt(timerEl.getAttribute('data-cutoff'), 10); if(isNaN(cutoff)) cutoff = 12;
+      var tick = function(){
+        var nowET = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }));
+        var c = new Date(nowET); c.setHours(cutoff, 0, 0, 0);
+        var day = nowET.getDay();
+        if(nowET < c && day >= 1 && day <= 5){
+          var d = c - nowET, h = Math.floor(d/3600000), m = Math.floor(d%3600000/60000), s = Math.floor(d%60000/1000);
+          timerEl.innerHTML = '⏱ Order within <strong>' + h + 'h ' + (m<10?'0':'') + m + 'm ' + (s<10?'0':'') + s + 's</strong> for same-day dispatch';
+        } else {
+          timerEl.innerHTML = '🚚 Order now — ships the next business day';
+        }
+        timerEl.hidden = false;
+      };
+      tick(); setInterval(tick, 1000);
+    }
   })();
 </script>
 {% schema %}
-{ "name": "Product", "settings": [] }
+{
+  "name": "Product",
+  "settings": [
+    { "type": "header", "content": "Trust & conversion" },
+    { "type": "checkbox", "id": "pdp_show_scarcity", "label": "Show low-stock urgency", "default": true },
+    { "type": "range", "id": "pdp_scarcity_threshold", "label": "Low-stock threshold", "min": 1, "max": 25, "step": 1, "default": 10 },
+    { "type": "checkbox", "id": "pdp_show_countdown", "label": "Show same-day shipping countdown", "default": true },
+    { "type": "range", "id": "pdp_cutoff_hour", "label": "Same-day cutoff hour (ET, 24h)", "min": 0, "max": 23, "step": 1, "default": 12 },
+    { "type": "checkbox", "id": "pdp_show_payments", "label": "Show payment badges", "default": true },
+    { "type": "header", "content": "Benefit ticks" },
+    { "type": "text", "id": "pdp_benefit_1", "label": "Benefit 1", "default": "Hand-poured resin — no two alike" },
+    { "type": "text", "id": "pdp_benefit_2", "label": "Benefit 2", "default": "Tarnish-proof gold chain" },
+    { "type": "text", "id": "pdp_benefit_3", "label": "Benefit 3", "default": "18\" length — lightweight & comfy" },
+    { "type": "text", "id": "pdp_benefit_4", "label": "Benefit 4", "default": "Free US shipping, ships fast" },
+    { "type": "header", "content": "Guarantee" },
+    { "type": "text", "id": "pdp_guarantee_title", "label": "Guarantee title", "default": "30-Day Happiness Guarantee" },
+    { "type": "text", "id": "pdp_guarantee_text", "label": "Guarantee text", "default": "Love it or send it back for a full refund — no fuss." }
+  ]
+}
 {% endschema %}
