@@ -4,6 +4,8 @@
     product : the product whose variants become flavors
     mode    : 'link'  → <a> swatches that deep-link to ?variant=ID (Tap a Flavor)
               'stack' → <button> swatches carrying the variant id (Build a Stack)
+  Each swatch carries data-img (the variant's real photo) so the stage/slots can
+  show the actual necklace instead of the SVG mock bear.
 {%- endcomment -%}
 {%- assign vp = product -%}
 {%- assign color_opt = blank -%}
@@ -34,12 +36,15 @@
     {%- capture hex -%}{% render 'color-hex', name: value %}{%- endcapture -%}
     {%- assign hex = hex | strip -%}
     {%- assign vurl = vp.url | append: '?variant=' | append: vmatch.id -%}
+    {%- assign vimg = vmatch.image | default: vp.featured_image -%}
+    {%- assign vimg_url = vimg | image_url: width: 500 -%}
     {%- if mode == 'stack' -%}
       <button type="button" class="swatch" data-stack-flavor
         style="background:{{ hex }}"
         data-color="{{ hex }}"
         data-label="{{ value | escape }}"
         data-variant-id="{{ vmatch.id }}"
+        data-img="{{ vimg_url }}"
         {% unless vmatch.available %}disabled aria-disabled="true" title="{{ value | escape }} — sold out"{% endunless %}
         aria-label="Add {{ value | escape }} to your stack"></button>
     {%- else -%}
@@ -51,6 +56,7 @@
         data-label="{{ value | escape }}"
         data-desc="{{ vmatch.price | money }}"
         data-url="{{ vurl }}"
+        data-img="{{ vimg_url }}"
         aria-label="{{ value | escape }} necklace"></a>
     {%- endif -%}
     {%- assign rendered = rendered | plus: 1 -%}
