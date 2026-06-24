@@ -1,20 +1,54 @@
-<div class="coll-head">
-  <div class="wrap">
-    <h1>{{ collection.title }}</h1>
-    {%- if collection.description != blank -%}<div class="rte muted" style="margin-top:.6rem">{{ collection.description }}</div>{%- endif -%}
-    {%- if settings.show_rating -%}
-      <div class="coll-meta"><span class="stars">★★★★★</span> {{ settings.rating_value }} · loved by {{ settings.rating_count }} customers</div>
-    {%- endif -%}
-    <div class="coll-trust">
-      <span>🇺🇸 Handmade in the USA</span>
-      <span>🚚 Free US shipping</span>
-      <span>↩︎ 30-day returns</span>
-      <span>🔒 Secure checkout</span>
+{%- liquid
+  assign s = section.settings
+  assign show_hero = false
+  if s.show_hero_image and collection.image != blank
+    assign show_hero = true
+  endif
+-%}
+{%- if show_hero -%}
+  <section class="coll-hero">
+    <img class="coll-hero-img" src="{{ collection.image | image_url: width: 2000 }}"
+         srcset="{{ collection.image | image_url: width: 800 }} 800w, {{ collection.image | image_url: width: 1400 }} 1400w, {{ collection.image | image_url: width: 2000 }} 2000w"
+         sizes="100vw" alt="{{ collection.title | escape }}" width="2000" height="700" fetchpriority="high">
+    <span class="coll-hero-scrim"></span>
+    <div class="coll-hero-inner wrap">
+      <h1>{{ collection.title }}</h1>
+      {%- if collection.description != blank -%}<div class="rte coll-hero-desc">{{ collection.description }}</div>{%- endif -%}
+    </div>
+  </section>
+{%- else -%}
+  <div class="coll-head">
+    <div class="wrap">
+      <h1>{{ collection.title }}</h1>
+      {%- if collection.description != blank -%}<div class="rte muted" style="margin-top:.6rem">{{ collection.description }}</div>{%- endif -%}
     </div>
   </div>
-</div>
+{%- endif -%}
+
 <div class="section" style="padding-top:18px">
   <div class="wrap">
+    <div class="coll-subhead">
+      {%- if settings.show_rating -%}
+        <div class="coll-meta"><span class="stars">★★★★★</span> {{ settings.rating_value }} · loved by {{ settings.rating_count }} customers</div>
+      {%- endif -%}
+      <div class="coll-trust">
+        <span>🇺🇸 Handmade in the USA</span>
+        <span>🚚 Free US shipping</span>
+        <span>↩︎ 30-day returns</span>
+        <span>🔒 Secure checkout</span>
+      </div>
+      {%- if s.show_flavor_row -%}
+        {%- assign fnames = 'Blue,Red,Purple,Pink,Green,Yellow,Gold,Black' | split: ',' -%}
+        {%- assign fhex = '#3D8BFF,#FF3B5C,#A55CFF,#FF6FB0,#46CF7C,#FFCE2E,#E9B949,#34202C' | split: ',' -%}
+        <div class="coll-flavors">
+          <span class="coll-flavors-lbl">Shop by color:</span>
+          {%- for name in fnames -%}
+            <a class="coll-flavor" href="{{ routes.search_url }}?q={{ name | url_encode }}&type=product" style="background:{{ fhex[forloop.index0] }}" title="{{ name }}" aria-label="Shop {{ name }}"></a>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+
     <div class="coll-toolbar">
       <span class="count">{{ collection.products_count }} product{% if collection.products_count != 1 %}s{% endif %}</span>
       {%- if collection.sort_options.size > 0 -%}
@@ -29,10 +63,20 @@
         </div>
       {%- endif -%}
     </div>
+
     {%- paginate collection.products by 12 -%}
       <div class="grid">
         {%- assign colors = '#3D8BFF,#FF3B5C,#A55CFF,#FF8A3D,#46CF7C,#FF6FB0,#FFCE2E,#34D6D6' | split: ',' -%}
+        {%- assign promo_pos = s.promo_position | default: 4 -%}
         {%- for product in collection.products -%}
+          {%- if s.show_promo_tile and forloop.index == promo_pos -%}
+            <a class="promo-tile gummy" href="{{ s.promo_link | default: routes.all_products_collection_url }}">
+              <span class="promo-tile-badge">Limited time</span>
+              <h3>{{ s.promo_title | default: '🎆 20% off everything' }}</h3>
+              {%- if s.promo_text != blank -%}<p>{{ s.promo_text }}</p>{%- endif -%}
+              <span class="promo-tile-cta">{{ s.promo_cta | default: 'Shop the sale' }} →</span>
+            </a>
+          {%- endif -%}
           {% render 'product-card', product: product, bear_color: colors[forloop.index0] %}
         {%- else -%}
           <p class="muted">No products yet — check back soon.</p>
@@ -45,5 +89,20 @@
   </div>
 </div>
 {% schema %}
-{ "name": "Collection", "settings": [] }
+{
+  "name": "Collection",
+  "settings": [
+    { "type": "header", "content": "Hero banner" },
+    { "type": "checkbox", "id": "show_hero_image", "label": "Use collection image as a hero banner", "default": true },
+    { "type": "header", "content": "Shop by color" },
+    { "type": "checkbox", "id": "show_flavor_row", "label": "Show 'shop by color' swatches", "default": true },
+    { "type": "header", "content": "In-grid promo tile" },
+    { "type": "checkbox", "id": "show_promo_tile", "label": "Show promo tile in the grid", "default": true },
+    { "type": "text", "id": "promo_title", "label": "Promo title", "default": "🎆 20% off everything" },
+    { "type": "text", "id": "promo_text", "label": "Promo text", "default": "Use code USA20 at checkout — ends July 4." },
+    { "type": "text", "id": "promo_cta", "label": "Promo button", "default": "Shop the sale" },
+    { "type": "url", "id": "promo_link", "label": "Promo link" },
+    { "type": "range", "id": "promo_position", "label": "Promo tile position in grid", "min": 1, "max": 12, "step": 1, "default": 4 }
+  ]
+}
 {% endschema %}

@@ -315,6 +315,22 @@ button{font-family:inherit}
 .coll-toolbar .count{color:var(--ink-soft);font-size:.9rem}
 .coll-sort{display:flex;align-items:center;gap:.4rem;font-size:.88rem;color:var(--ink-soft)}
 .coll-sort select{border:1px solid var(--line);border-radius:999px;padding:.4rem .8rem;font:inherit;font-size:.88rem;background:#fff;cursor:pointer;color:var(--ink)}
+.coll-hero{position:relative;display:flex;align-items:flex-end;min-height:300px;overflow:hidden;margin-bottom:8px}
+.coll-hero-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.coll-hero-scrim{position:absolute;inset:0;background:linear-gradient(to top,rgba(26,15,23,.72),rgba(26,15,23,.12) 60%,transparent)}
+.coll-hero-inner{position:relative;z-index:2;color:#fff;padding:40px 22px}
+.coll-hero-inner h1{font-size:clamp(2.1rem,5vw,3.4rem);margin:0}
+.coll-hero-desc{margin-top:.5rem;max-width:620px;opacity:.95}
+.coll-subhead{text-align:center;margin-bottom:18px}
+.coll-flavors{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:.45rem;margin-top:1rem}
+.coll-flavors-lbl{font-size:.85rem;font-weight:700;color:var(--ink-soft);margin-right:.2rem}
+.coll-flavor{width:26px;height:26px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.12);transition:transform .15s}
+.coll-flavor:hover{transform:scale(1.15)}
+.promo-tile{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:.25rem;padding:22px;border-radius:var(--r-md);color:#fff;background:linear-gradient(135deg,var(--cta,#DC1A57),#A55CFF);text-align:left}
+.promo-tile-badge{font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;background:rgba(255,255,255,.25);padding:.2rem .55rem;border-radius:999px}
+.promo-tile h3{font-family:var(--font-display);font-size:1.3rem;line-height:1.1;margin:.45rem 0 .2rem;color:#fff}
+.promo-tile p{font-size:.9rem;opacity:.95;margin:0 0 .5rem}
+.promo-tile-cta{font-weight:800;font-family:var(--font-display)}
 .rte{max-width:70ch;margin:0 auto;color:var(--ink)}
 .rte h2,.rte h3{font-family:var(--font-display);margin:1.4rem 0 .5rem}
 .rte p{margin:.7rem 0}
