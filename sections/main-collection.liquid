@@ -2,10 +2,33 @@
   <div class="wrap">
     <h1>{{ collection.title }}</h1>
     {%- if collection.description != blank -%}<div class="rte muted" style="margin-top:.6rem">{{ collection.description }}</div>{%- endif -%}
+    {%- if settings.show_rating -%}
+      <div class="coll-meta"><span class="stars">★★★★★</span> {{ settings.rating_value }} · loved by {{ settings.rating_count }} customers</div>
+    {%- endif -%}
+    <div class="coll-trust">
+      <span>🇺🇸 Handmade in the USA</span>
+      <span>🚚 Free US shipping</span>
+      <span>↩︎ 30-day returns</span>
+      <span>🔒 Secure checkout</span>
+    </div>
   </div>
 </div>
 <div class="section" style="padding-top:18px">
   <div class="wrap">
+    <div class="coll-toolbar">
+      <span class="count">{{ collection.products_count }} product{% if collection.products_count != 1 %}s{% endif %}</span>
+      {%- if collection.sort_options.size > 0 -%}
+        <div class="coll-sort">
+          <label for="collSort">Sort</label>
+          <select id="collSort" aria-label="Sort products" onchange="window.location.href='{{ collection.url }}?sort_by=' + this.value">
+            {%- assign current_sort = collection.sort_by | default: collection.default_sort_by -%}
+            {%- for opt in collection.sort_options -%}
+              <option value="{{ opt.value }}"{% if opt.value == current_sort %} selected{% endif %}>{{ opt.name }}</option>
+            {%- endfor -%}
+          </select>
+        </div>
+      {%- endif -%}
+    </div>
     {%- paginate collection.products by 12 -%}
       <div class="grid">
         {%- assign colors = '#3D8BFF,#FF3B5C,#A55CFF,#FF8A3D,#46CF7C,#FF6FB0,#FFCE2E,#34D6D6' | split: ',' -%}

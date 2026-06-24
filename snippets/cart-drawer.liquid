@@ -36,6 +36,18 @@
     <form action="{{ routes.cart_url }}" method="post">
       <button type="submit" name="checkout" class="btn full lg">Checkout securely 🔒</button>
     </form>
+    <div class="cd-trust">
+      <div class="cd-pay">
+        <span>Shop&nbsp;Pay</span><span>Apple&nbsp;Pay</span><span>Google&nbsp;Pay</span><span>Visa</span><span>MC</span><span>Amex</span><span>PayPal</span>
+      </div>
+      <p class="cd-trustline">🔒 Secure checkout · ↩︎ 30-day returns · 🇺🇸 Made in the USA</p>
+    </div>
     <a href="{{ routes.cart_url }}" class="cd-view-cart">View full cart</a>
   </footer>
 </aside>
+<style>
+  .cd-trust{margin-top:.8rem;text-align:center}
+  .cd-pay{display:flex;flex-wrap:wrap;gap:.3rem;justify-content:center;margin-bottom:.45rem}
+  .cd-pay span{font-size:.62rem;font-weight:700;letter-spacing:.02em;color:var(--ink-soft);background:#fff;border:1px solid var(--line);border-radius:5px;padding:.18rem .42rem}
+  .cd-trustline{font-size:.74rem;color:var(--ink-soft);margin:0}
+</style>

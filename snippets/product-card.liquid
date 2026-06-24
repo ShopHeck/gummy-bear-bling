@@ -1,9 +1,31 @@
 {%- comment -%} Param: product (object), bear_color (fallback color) {%- endcomment -%}
-{%- assign bc = bear_color | default: '#3D8BFF' -%}
+{%- liquid
+  assign bc = bear_color | default: '#3D8BFF'
+  assign on_sale = false
+  if product.compare_at_price > product.price
+    assign on_sale = true
+  endif
+  assign now_s = 'now' | date: '%s' | plus: 0
+  assign pub_s = product.published_at | date: '%s' | plus: 0
+  assign age_days = now_s | minus: pub_s | divided_by: 86400
+  assign is_new = false
+  if age_days < 30
+    assign is_new = true
+  endif
+  assign color_opt = nil
+  for opt in product.options_with_values
+    assign oname = opt.name | downcase
+    if oname contains 'color' or oname contains 'colour' or oname contains 'flavor' or oname contains 'flavour'
+      assign color_opt = opt
+    endif
+  endfor
+-%}
 <a href="{{ product.url }}" class="pcard gummy reveal">
   <div class="ph">
-    {%- if product.compare_at_price > product.price -%}
-      <span class="badge">Sale</span>
+    {%- if on_sale -%}
+      <span class="badge sale">Save {{ product.compare_at_price | minus: product.price | money_without_trailing_zeros }}</span>
+    {%- elsif is_new -%}
+      <span class="badge new">New</span>
     {%- endif -%}
     {%- if product.featured_media -%}
       <img src="{{ product.featured_media | image_url: width: 600 }}"
@@ -13,19 +35,32 @@
            sizes="(max-width:520px) 45vw, (max-width:900px) 45vw, 25vw"
            alt="{{ product.featured_media.alt | escape | default: product.title }}"
            loading="lazy" width="600" height="600">
+      {%- if product.media[1] != blank -%}
+        <img class="ph-alt" src="{{ product.media[1] | image_url: width: 600 }}" alt="" loading="lazy" width="600" height="600" aria-hidden="true">
+      {%- endif -%}
     {%- else -%}
       <span class="chain"></span>
       <span class="bearbox" data-bear="{{ bc }}"></span>
     {%- endif -%}
+    <span class="pcard-cta">{% if product.available %}Shop now →{% else %}Sold out{% endif %}</span>
   </div>
   <h3>{{ product.title }}</h3>
+  {%- if color_opt and color_opt.values.size > 1 -%}
+    <div class="pcard-swatches" aria-hidden="true">
+      {%- for value in color_opt.values limit: 6 -%}
+        {%- capture hex -%}{% render 'color-hex', name: value %}{%- endcapture -%}
+        <span style="background:{{ hex | strip | default: '#ddd' }}" title="{{ value | escape }}"></span>
+      {%- endfor -%}
+      {%- if color_opt.values.size > 6 -%}<span class="more">+{{ color_opt.values.size | minus: 6 }}</span>{%- endif -%}
+    </div>
+  {%- endif -%}
   <div class="price">
     {{ product.price | money }}
-    {%- if product.compare_at_price > product.price -%}<s>{{ product.compare_at_price | money }}</s>{%- endif -%}
+    {%- if on_sale -%}<s>{{ product.compare_at_price | money }}</s>{%- endif -%}
   </div>
   {%- if product.metafields.reviews.rating.value != blank -%}
-    <div class="rev"><span class="stars">★★★★★</span> {{ product.metafields.reviews.rating_count }} reviews</div>
+    <div class="rev"><span class="stars">★★★★★</span> {{ product.metafields.reviews.rating.value }} ({{ product.metafields.reviews.rating_count }})</div>
   {%- elsif settings.show_rating -%}
-    <div class="rev"><span class="stars">★★★★★</span> loved</div>
+    <div class="rev"><span class="stars">★★★★★</span> {{ settings.rating_value }}</div>
   {%- endif -%}
 </a>
