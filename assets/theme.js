@@ -107,7 +107,12 @@
         swatches.forEach(function (s) { s.classList.remove("active"); s.setAttribute("aria-current", "false"); });
         el.classList.add("active");
         el.setAttribute("aria-current", "true");
-        if (stage) stage.innerHTML = bearSVG(el.getAttribute("data-color"));
+        if (stage) {
+          var csImg = el.getAttribute("data-img");
+          stage.innerHTML = csImg
+            ? '<img src="' + esc(csImg) + '" alt="' + esc(el.getAttribute("data-label")) + '">'
+            : bearSVG(el.getAttribute("data-color"));
+        }
         if (nameEl) {
           var desc = el.getAttribute("data-desc");
           nameEl.innerHTML = "<b>" + el.getAttribute("data-label") + "</b>" + (desc ? " — " + desc : "");
@@ -152,11 +157,14 @@
           if (state[i]) {
             slot.classList.add("filled");
             slot.setAttribute("data-flavor-label", state[i].label);
-            if (box) box.innerHTML = bearSVG(state[i].color);
+            if (box) {
+              if (state[i].img) { box.classList.add("has-photo"); box.innerHTML = '<img src="' + esc(state[i].img) + '" alt="' + esc(state[i].label) + '">'; }
+              else { box.classList.remove("has-photo"); box.innerHTML = bearSVG(state[i].color); }
+            }
           } else {
             slot.classList.remove("filled");
             slot.removeAttribute("data-flavor-label");
-            if (box) box.innerHTML = "";
+            if (box) { box.classList.remove("has-photo"); box.innerHTML = ""; }
           }
         });
         props.forEach(function (p, i) { p.value = state[i] ? state[i].label : ""; });
@@ -191,7 +199,7 @@
       flavorBtns.forEach(function (b) {
         b.addEventListener("click", function () {
           if (b.disabled) return;
-          addFlavor({ color: b.getAttribute("data-color"), label: b.getAttribute("data-label"), id: b.getAttribute("data-variant-id") || null });
+          addFlavor({ color: b.getAttribute("data-color"), label: b.getAttribute("data-label"), id: b.getAttribute("data-variant-id") || null, img: b.getAttribute("data-img") || null });
         });
       });
 
@@ -208,7 +216,7 @@
             var match = flavorBtns.filter(function (b) {
               return (b.getAttribute("data-label") || "").toLowerCase() === lbl;
             })[0];
-            if (match && !match.disabled) addFlavor({ color: match.getAttribute("data-color"), label: match.getAttribute("data-label"), id: match.getAttribute("data-variant-id") || null });
+            if (match && !match.disabled) addFlavor({ color: match.getAttribute("data-color"), label: match.getAttribute("data-label"), id: match.getAttribute("data-variant-id") || null, img: match.getAttribute("data-img") || null });
           });
         }
       } catch (e) {}

@@ -20,6 +20,7 @@
             {%- for block in section.blocks -%}
               {%- assign fp = block.settings.product -%}
               {%- assign furl = fallback -%}
+              {%- assign fimg = fp.featured_image -%}
               {%- if fp != blank -%}
                 {%- assign furl = fp.url -%}
                 {%- if block.settings.variant != blank -%}
@@ -38,6 +39,7 @@
                  data-label="{{ block.settings.label | escape }}"
                  data-desc="{{ block.settings.description | escape }}"
                  data-url="{{ furl }}"
+                 {% if fimg %}data-img="{{ fimg | image_url: width: 500 }}"{% endif %}
                  aria-label="{{ block.settings.label | escape }} — shop this necklace"
                  {{ block.shopify_attributes }}></a>
             {%- endfor -%}
