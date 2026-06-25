@@ -4,6 +4,16 @@
   if s.show_hero_image and collection.image != blank
     assign show_hero = true
   endif
+  # find a colour/flavour filter (when Search & Discovery exposes one)
+  assign color_filter = nil
+  for f in collection.filters
+    assign fl = f.label | downcase
+    if fl contains 'color' or fl contains 'colour' or fl contains 'flavor' or fl contains 'flavour'
+      if color_filter == nil
+        assign color_filter = f
+      endif
+    endif
+  endfor
 -%}
 {%- if show_hero -%}
   <section class="coll-hero">
@@ -37,32 +47,75 @@
         <span>↩︎ 30-day returns</span>
         <span>🔒 Secure checkout</span>
       </div>
-      {%- if s.show_flavor_row -%}
-        {%- assign fnames = 'Blue,Red,Purple,Pink,Green,Yellow,Gold,Black' | split: ',' -%}
-        {%- assign fhex = '#3D8BFF,#FF3B5C,#A55CFF,#FF6FB0,#46CF7C,#FFCE2E,#E9B949,#34202C' | split: ',' -%}
+      {%- if s.show_flavor_row and color_filter != nil -%}
         <div class="coll-flavors">
           <span class="coll-flavors-lbl">Shop by color:</span>
-          {%- for name in fnames -%}
-            <a class="coll-flavor" href="{{ routes.search_url }}?q={{ name | url_encode }}&type=product" style="background:{{ fhex[forloop.index0] }}" title="{{ name }}" aria-label="Shop {{ name }}"></a>
+          {%- for v in color_filter.values -%}
+            {%- capture chex -%}{% render 'color-hex', name: v.label %}{%- endcapture -%}
+            <a class="coll-flavor{% if v.active %} active{% endif %}"
+               href="{% if v.active %}{{ v.url_to_remove }}{% else %}{{ v.url_to_add }}{% endif %}"
+               style="background:{{ chex | strip | default: '#ddd' }}"
+               title="{{ v.label }} ({{ v.count }})" aria-label="Filter by {{ v.label | escape }}"></a>
           {%- endfor -%}
         </div>
       {%- endif -%}
     </div>
 
-    <div class="coll-toolbar">
-      <span class="count">{{ collection.products_count }} product{% if collection.products_count != 1 %}s{% endif %}</span>
-      {%- if collection.sort_options.size > 0 -%}
-        <div class="coll-sort">
-          <label for="collSort">Sort</label>
-          <select id="collSort" aria-label="Sort products" onchange="window.location.href='{{ collection.url }}?sort_by=' + this.value">
-            {%- assign current_sort = collection.sort_by | default: collection.default_sort_by -%}
-            {%- for opt in collection.sort_options -%}
-              <option value="{{ opt.value }}"{% if opt.value == current_sort %} selected{% endif %}>{{ opt.name }}</option>
+    <form method="get" class="coll-filterbar">
+      <div class="cf-row">
+        {%- for filter in collection.filters -%}
+          <details class="cf-drop">
+            <summary>{{ filter.label }}{%- if filter.type == 'price_range' -%}{%- if filter.min_value.value or filter.max_value.value %} •{% endif -%}{%- elsif filter.active_values.size > 0 %} ({{ filter.active_values.size }}){% endif -%}</summary>
+            <div class="cf-panel">
+              {%- case filter.type -%}
+              {%- when 'list', 'boolean' -%}
+                {%- for v in filter.values -%}
+                  <label class="cf-opt"><input type="checkbox" name="{{ v.param_name }}" value="{{ v.value | escape }}"{% if v.active %} checked{% endif %}><span>{{ v.label }}</span><small>{{ v.count }}</small></label>
+                {%- endfor -%}
+                <button type="submit" class="btn sm cf-apply">Apply</button>
+              {%- when 'price_range' -%}
+                <div class="cf-price">
+                  <input type="number" inputmode="decimal" min="0" name="{{ filter.min_value.param_name }}" value="{{ filter.min_value.value }}" placeholder="Min">
+                  <span>–</span>
+                  <input type="number" inputmode="decimal" min="0" name="{{ filter.max_value.param_name }}" value="{{ filter.max_value.value }}" placeholder="Max">
+                  <button type="submit" class="btn sm">Go</button>
+                </div>
+              {%- endcase -%}
+            </div>
+          </details>
+        {%- endfor -%}
+        <span class="cf-spacer"></span>
+        <span class="cf-count">{{ collection.products_count }} product{% if collection.products_count != 1 %}s{% endif %}</span>
+        {%- if collection.sort_options.size > 0 -%}
+          <label class="cf-sort">Sort
+            <select name="sort_by" onchange="this.form.submit()">
+              {%- assign current_sort = collection.sort_by | default: collection.default_sort_by -%}
+              {%- for opt in collection.sort_options -%}
+                <option value="{{ opt.value }}"{% if opt.value == current_sort %} selected{% endif %}>{{ opt.name }}</option>
+              {%- endfor -%}
+            </select>
+          </label>
+        {%- endif -%}
+        <noscript><button type="submit" class="btn sm">Apply</button></noscript>
+      </div>
+      {%- assign any_active = false -%}
+      {%- for filter in collection.filters -%}
+        {%- if filter.active_values.size > 0 or filter.min_value.value or filter.max_value.value -%}{%- assign any_active = true -%}{%- endif -%}
+      {%- endfor -%}
+      {%- if any_active -%}
+        <div class="cf-active">
+          {%- for filter in collection.filters -%}
+            {%- for v in filter.active_values -%}
+              <a class="cf-chip" href="{{ v.url_to_remove }}">{{ v.label }} ✕</a>
             {%- endfor -%}
-          </select>
+            {%- if filter.type == 'price_range' and filter.min_value.value or filter.max_value.value -%}
+              <a class="cf-chip" href="{{ filter.url_to_remove }}">{{ filter.label }} ✕</a>
+            {%- endif -%}
+          {%- endfor -%}
+          <a class="cf-clear" href="{{ collection.url }}">Clear all</a>
         </div>
       {%- endif -%}
-    </div>
+    </form>
 
     {%- paginate collection.products by 12 -%}
       <div class="grid">
@@ -79,7 +132,7 @@
           {%- endif -%}
           {% render 'product-card', product: product, bear_color: colors[forloop.index0] %}
         {%- else -%}
-          <p class="muted">No products yet — check back soon.</p>
+          <p class="muted" style="grid-column:1/-1;text-align:center;padding:30px 0">No products match these filters. <a href="{{ collection.url }}">Clear filters</a> to see everything.</p>
         {%- endfor -%}
       </div>
       {%- if paginate.pages > 1 -%}
@@ -95,7 +148,7 @@
     { "type": "header", "content": "Hero banner" },
     { "type": "checkbox", "id": "show_hero_image", "label": "Use collection image as a hero banner", "default": true },
     { "type": "header", "content": "Shop by color" },
-    { "type": "checkbox", "id": "show_flavor_row", "label": "Show 'shop by color' swatches", "default": true },
+    { "type": "checkbox", "id": "show_flavor_row", "label": "Show 'shop by color' swatches", "info": "Appears when Search & Discovery exposes a Color/Flavor filter on this collection.", "default": true },
     { "type": "header", "content": "In-grid promo tile" },
     { "type": "checkbox", "id": "show_promo_tile", "label": "Show promo tile in the grid", "default": true },
     { "type": "text", "id": "promo_title", "label": "Promo title", "default": "🎆 20% off everything" },
