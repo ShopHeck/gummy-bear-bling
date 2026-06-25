@@ -7,7 +7,11 @@
           <div class="cart-row">
             <div class="thumb">
               {%- if item.image -%}<img src="{{ item.image | image_url: width: 168 }}" alt="{{ item.title | escape }}">
-              {%- else -%}<span class="bearbox" data-bear="#FF6FB0"></span>{%- endif -%}
+              {%- else -%}
+                {%- assign thumb_feat = all_products['gummy-bear-necklace'] -%}
+                {%- if thumb_feat != empty and thumb_feat.featured_image -%}<img src="{{ thumb_feat.featured_image | image_url: width: 168 }}" alt="{{ item.title | escape }}">
+                {%- else -%}<span class="bearbox" data-bear="#FF6FB0"></span>{%- endif -%}
+              {%- endif -%}
             </div>
             <div>
               <h4>{{ item.product.title }}</h4>
@@ -33,10 +37,23 @@
           </div>
         </div>
         <button type="submit" name="checkout" class="btn full lg" style="margin-top:1rem">Checkout securely 🔒</button>
+        <div class="cart-trust">
+          <div class="cart-pay">
+            <span>Shop&nbsp;Pay</span><span>Apple&nbsp;Pay</span><span>Google&nbsp;Pay</span><span>Visa</span><span>MC</span><span>Amex</span><span>PayPal</span>
+          </div>
+          <p class="cart-trustline">🔒 Secure checkout · ↩︎ 30-day returns · 🇺🇸 Made in the USA · 🚚 Free US shipping</p>
+        </div>
       {%- endform -%}
     {%- else -%}
       <div class="empty gummy" style="padding:60px 20px">
-        <div class="big">{% render 'gummy-bear', color: '#A55CFF', size: '120px' %}</div>
+        <div class="big" style="margin-bottom:8px">
+          {%- assign empty_feat = all_products['gummy-bear-necklace'] -%}
+          {%- if empty_feat != empty and empty_feat.featured_image -%}
+            <img src="{{ empty_feat.featured_image | image_url: width: 320 }}" alt="" style="width:200px;max-width:62%;border-radius:22px" loading="lazy">
+          {%- else -%}
+            {% render 'gummy-bear', color: '#A55CFF', size: '120px' %}
+          {%- endif -%}
+        </div>
         <h3 style="font-size:1.5rem">Your cart is empty</h3>
         <p class="muted" style="margin:.5rem 0 1.2rem">Let's fix that — your bears are waiting.</p>
         <a href="{{ routes.all_products_collection_url }}" class="btn">Shop the bears</a>
@@ -44,6 +61,12 @@
     {%- endif -%}
   </div>
 </div>
+<style>
+  .cart-trust{margin-top:1rem;text-align:center}
+  .cart-pay{display:flex;flex-wrap:wrap;gap:.3rem;justify-content:center;margin-bottom:.45rem}
+  .cart-pay span{font-size:.66rem;font-weight:700;letter-spacing:.02em;color:var(--ink-soft);background:#fff;border:1px solid var(--line);border-radius:5px;padding:.2rem .45rem}
+  .cart-trustline{font-size:.8rem;color:var(--ink-soft);margin:0}
+</style>
 {% schema %}
 { "name": "Cart", "settings": [] }
 {% endschema %}

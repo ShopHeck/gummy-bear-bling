@@ -39,8 +39,13 @@
         <img class="ph-alt" src="{{ product.media[1] | image_url: width: 600 }}" alt="" loading="lazy" width="600" height="600" aria-hidden="true">
       {%- endif -%}
     {%- else -%}
-      <span class="chain"></span>
-      <span class="bearbox" data-bear="{{ bc }}"></span>
+      {%- assign pc_fallback = all_products['gummy-bear-necklace'] -%}
+      {%- if pc_fallback != empty and pc_fallback.featured_image -%}
+        <img src="{{ pc_fallback.featured_image | image_url: width: 600 }}" alt="{{ product.title | escape }}" loading="lazy" width="600" height="600">
+      {%- else -%}
+        <span class="chain"></span>
+        <span class="bearbox" data-bear="{{ bc }}"></span>
+      {%- endif -%}
     {%- endif -%}
     <span class="pcard-cta">{% if product.available %}Shop now →{% else %}Sold out{% endif %}</span>
   </div>

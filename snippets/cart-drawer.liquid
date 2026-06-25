@@ -16,7 +16,14 @@
 
   <div class="cd-body" data-cart-body>
     <div class="cd-empty" data-cart-empty>
-      <div class="big" style="width:96px;margin:0 auto 14px">{% render 'gummy-bear', color: '#A55CFF', size: '96px' %}</div>
+      <div class="big" style="margin:0 auto 14px">
+        {%- assign cd_feat = all_products['gummy-bear-necklace'] -%}
+        {%- if cd_feat != empty and cd_feat.featured_image -%}
+          <img src="{{ cd_feat.featured_image | image_url: width: 220 }}" alt="" style="width:130px;max-width:60%;border-radius:16px" loading="lazy">
+        {%- else -%}
+          <span style="display:inline-block;width:96px">{% render 'gummy-bear', color: '#A55CFF', size: '96px' %}</span>
+        {%- endif -%}
+      </div>
       <h3 style="font-size:1.3rem">Your cart is empty</h3>
       <p class="muted" style="margin:.4rem 0 1rem">Let's fix that — your bears are waiting.</p>
       <a href="{{ routes.all_products_collection_url }}" class="btn" data-cart-close>Shop the bears</a>
